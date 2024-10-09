@@ -135,7 +135,7 @@ const App = () => {
         key={`${row}-${col}`}
         style={[
           styles.square,
-          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#B0E0E6') : 'white' },
+          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#B0E0E6') : '#b65fc8' },
         ]}
         onPress={() => handleSquarePress(row, col)}
       >
@@ -146,7 +146,7 @@ const App = () => {
 
   return (
        <LinearGradient
-        colors={['#E0FFFF', '#6cb7f5', '#3576ab']}
+        colors={['#010305','#0e1e2b', '#121c69']}
         style={styles.gradient}
       >
     <View style={styles.container}>
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     backgroundColor: '',
     padding: 8,
     borderWidth: 8,
-    borderColor: '#1E90FF',
+    borderColor: '#121c69',
   },
   row: {
     flexDirection: 'row',
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#1E90FF',
+    borderColor: '#121c69',
   },
   squareText: {
     fontSize: 18,

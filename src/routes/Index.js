@@ -14,6 +14,8 @@ import JogodaVelha from "../pages/JogodaVelha";
 import JogoPalavras from "../pages/JogoPalavras";
 import QuebraCabeca from "../pages/QuebraCabeca";
 import Catalogo from "../pages/Catalogo";
+import JogoDoClick from "../pages/JogoDoClick";
+import ChatScreen from "../pages/Chat";
 
 const Drawer = createDrawerNavigator();
 
@@ -49,11 +51,14 @@ export default function Index() {
         <Drawer.Screen name="JogoPalavras" component={JogoPalavras} />
         <Drawer.Screen name="QuebraCabeca" component={QuebraCabeca} />
         <Drawer.Screen name="Catalogo" component={Catalogo} />
+        <Drawer.Screen name="Chat" component={ChatScreen} />
+        <Drawer.Screen name="JogoDoClick" component={JogoDoClick} />
 
       </Drawer.Navigator>
     </NavigationContainer>
   );
 }
+
 
 
 
