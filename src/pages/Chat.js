@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { ImageBackground, SafeAreaView, StyleSheet, View } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';  
-
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -28,13 +27,21 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <GiftedChat
-        messages={messages}
-        onSend={(newMessages) => onSend(newMessages)}
-        user={{
-          _id: 1,
-        }}
-      />
+      <ImageBackground 
+        source={require('../images/galaxy.jpg')} 
+        style={styles.image} 
+        resizeMode="cover"
+      >
+        <View style={styles.view1}>
+          <GiftedChat
+            messages={messages}
+            onSend={(newMessages) => onSend(newMessages)}
+            user={{
+              _id: 1,
+            }}
+          />
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
@@ -42,8 +49,14 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#3e0c4a',
   },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  view1: {
+    flex: 1,
+  }
 });
 
 export default ChatScreen;

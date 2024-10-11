@@ -135,7 +135,7 @@ const App = () => {
         key={`${row}-${col}`}
         style={[
           styles.square,
-          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#B0E0E6') : '#b65fc8' },
+          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#B0E0E6') : '#4c0d6b' },
         ]}
         onPress={() => handleSquarePress(row, col)}
       >
@@ -174,8 +174,8 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    justifyContent: 'left',
+    alignItems: 'end',
   },
   board: {
     flexDirection: 'column',

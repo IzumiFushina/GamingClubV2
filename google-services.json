@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "150338001978",
+    "project_id": "gaming-club-5ee5b",
+    "storage_bucket": "gaming-club-5ee5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150338001978:android:57881c047b48af9e696903",
+        "android_client_info": {
+          "package_name": "com.clubgamingfruv.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2NmkOq0mdkCvGRNWXjkpVvSnafssrhDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

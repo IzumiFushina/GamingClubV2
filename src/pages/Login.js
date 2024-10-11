@@ -4,15 +4,30 @@ import { BlurView } from 'expo-blur'; // Importando BlurView
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient'; 
 import AntDesign from '@expo/vector-icons/AntDesign';
+import firebase from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
+import { auth } from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
+
+const signIn = async () => {
+  try {
+    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    // Lógica após login
+  } catch (error) {
+    console.error(error);
+    Alert.alert('Erro', error.message);
+  }
+};
+
 
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const translateY = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
     Animated.timing(translateY, {
-      toValue: 0, 
-      duration: 1000, 
+      toValue: 0,
+      duration: 1000,
       useNativeDriver: true,
     }).start();
 
@@ -24,52 +39,56 @@ export default function Login() {
     })();
   }, []);
 
+  const signIn = async () => {
+    try {
+      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+      // Lógica após login
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', error.message); // Adiciona um alerta para mostrar o erro
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground 
         source={require('../images/fundoagain.png')} 
         style={styles.background} 
       >
-        {/* BlurView criando o efeito de desfoque */}
         <BlurView intensity={50} style={styles.viewCds}>
           <TouchableOpacity style={styles.closeIcon} />
 
-          {/* Título "Login" e subtítulo */}
           <Text style={styles.titleText}>Login</Text>
           <Text style={styles.subtitleText}>Welcome back, please login to your account</Text>
 
           <Animated.View style={{ transform: [{ translateY }] }}>
             <View style={styles.inputContainer}>
-              
               <TextInput
                 style={styles.InputName}
                 placeholder="User name"
                 placeholderTextColor="white"
+                value={email}
+                onChangeText={setEmail} // Atualiza o estado
               />
             </View>
-             
-            {/* Aumentando a margem inferior do primeiro campo de entrada */}
+
             <View style={[styles.inputContainer, { marginBottom: 30 }]}>
               <TextInput
                 style={styles.InputName}
                 placeholder="Password"
                 placeholderTextColor="white"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword} // Atualiza o estado
               />
             </View>
 
-            <LinearGradient
-              colors={['#2C2081', '#573299']} // Cores do gradiente
-              style={styles.BtnCadastro}
-            >
-              <TouchableOpacity onPress={() => Alert.alert('Cadastro Iniciado')}>
+            <LinearGradient colors={['#2C2081', '#573299']} style={styles.BtnCadastro}>
+              <TouchableOpacity onPress={signIn}>
                 <Text style={styles.cdsButtonText}>Login</Text>
               </TouchableOpacity>
             </LinearGradient>
-            {/* Texto "Forget Password" posicionado abaixo do botão */}
             <Text style={styles.forgetPasswordText}>Forgot password?</Text>
-
-            {/* Texto "Don't have an account? Sign up" */}
             <Text style={styles.signUpText}>Don't have an account? Sign up</Text>
           </Animated.View>
         </BlurView>
