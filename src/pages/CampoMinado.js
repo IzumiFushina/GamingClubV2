@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   textTitulo: {
    fontFamily: 'Font1',
    fontSize: 30,
-   color: '#1E90FF',
+   color: '#2c2081',
    marginBottom: 30,
   },
 

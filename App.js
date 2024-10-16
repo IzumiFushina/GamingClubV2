@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Animated, TouchableOpacity, ImageBackground } from "react-native";
+import { Text, View, Animated, TouchableOpacity } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts } from "expo-font";
 import Index from "./src/routes/Index";
 import { registerRootComponent } from 'expo';
-
 
 registerRootComponent(Index);
 
@@ -39,8 +39,8 @@ export default function App() {
           <Index />
         </View>
       ) : (
-        <ImageBackground
-          source={require("./src/images/foto2.png")}
+        <LinearGradient
+          colors={['#121c69', '#0e1e2b']} // Degradê de roxo para preto
           style={{
             flex: 1,
             width: '100%',
@@ -48,7 +48,6 @@ export default function App() {
             justifyContent: 'center',
             alignItems: 'center',
           }}
-          imageStyle={{ resizeMode: 'cover' }}
         >
           <Animated.View
             style={{
@@ -58,23 +57,33 @@ export default function App() {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity 
+            {/* Conteúdo central pode ir aqui */}
+          </Animated.View>
+
+          <TouchableOpacity 
+            style={{
+              position: 'absolute', // Posiciona o botão de forma absoluta
+              bottom: 50, // Distância da parte inferior
+              alignSelf: 'center', // Centraliza horizontalmente
+              borderRadius: 25, // Para combinar com o botão arredondado
+            }}
+            onPress={() => setStart(true)}
+          >
+            <LinearGradient
+              colors={['#b65fc8', '#e07bda']} // Gradiente de roxo para branco
               style={{
-                backgroundColor: "purple",
                 paddingVertical: 15,
                 paddingHorizontal: 30,
                 borderRadius: 25,
                 flexDirection: 'row', 
                 alignItems: 'center',
-                justifyContent: 'center', 
-                marginTop: '10%',
+                justifyContent: 'center',
               }}
-              onPress={() => setStart(true)}
             >
-              <Text style={{ fontFamily: 'Font2', fontSize: 18, color: "#FFF" }}>Get Started</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </ImageBackground>
+              <Text style={{ fontFamily: 'Font2', fontSize: 18, color: "#FFF" }}>Continue</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </LinearGradient>
       )}
     </>
   );

@@ -1,61 +1,152 @@
-import React from 'react';
-import { View, Text, Image, Dimensions, StyleSheet } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { PanGestureHandler } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { View, Text, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
+import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient'; 
+import AntDesign from '@expo/vector-icons/AntDesign';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 const { width, height } = Dimensions.get('window');
 
 const slides = [
-  { image: require('../images/avatar.png'), text: 'Bem-vindo ao App!' },
-  { image: require('../images/fundo.png'), text: 'Descubra novas funcionalidades!' },
+  { image: require('../images/avatar.png'), text: 'Bem-vindo ao Gaming Club!' },
+  { image: require('../images/Gaming Club.png'), text: 'Descubra novos jogos!' },
   { image: require('../images/galaxy.jpg'), text: 'Comece sua jornada agora!' },
 ];
 
 const OnboardingScreen = () => {
   const translateX = useSharedValue(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const navigation = useNavigation();
+
+  const handleNext = () => {
+    if (currentSlide < slides.length - 1) {
+      const newSlide = currentSlide + 1;
+      setCurrentSlide(newSlide);
+      translateX.value = withTiming(-newSlide * width, { duration: 500 });
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentSlide > 0) {
+      const newSlide = currentSlide - 1;
+      setCurrentSlide(newSlide);
+      translateX.value = withTiming(-newSlide * width, { duration: 500 });
+    }
+  };
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: withSpring(translateX.value) }],
+    transform: [{ translateX: translateX.value }],
   }));
 
-  const handleGesture = (event) => {
-    translateX.value = -event.translationX;
+  const buttonAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(currentSlide === slides.length - 1 ? 1 : 0, { duration: 300 }),
+    transform: [{ scale: withSpring(currentSlide === slides.length - 1 ? 1 : 0.8) }],
+  }));
+
+  const handleStart = () => {
+    navigation.navigate('Catalogo');
   };
 
   return (
-    <PanGestureHandler onGestureEvent={handleGesture}>
-      <Animated.View style={[styles.container, animatedStyle]}>
+    <LinearGradient
+      colors={['#121c69', '#0e1e2b']}
+      style={styles.container}
+    >
+      <Animated.View style={[styles.slidesContainer, animatedStyle]}>
         {slides.map((slide, index) => (
-          <View key={index} style={[styles.slide, { backgroundColor: index % 2 === 0 ? '#f1f1f1' : '#fff' }]}>
+          <View key={index} style={styles.slide}>
             <Image source={slide.image} style={styles.image} />
             <Text style={styles.text}>{slide.text}</Text>
           </View>
         ))}
       </Animated.View>
-    </PanGestureHandler>
+
+      <View style={styles.bottomContainer}>
+        {currentSlide > 0 && (
+          <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
+            <AntDesign name="caretleft" size={30} color="black" />
+          </TouchableOpacity>
+        )}
+
+        <Animated.View style={buttonAnimatedStyle}>
+          <TouchableOpacity onPress={handleStart} style={styles.startButton}>
+            <LinearGradient
+              colors={['#000000', '#78145a', '#000000']}
+              style={styles.gradientButton}
+            >
+              <FontAwesome5 name="door-open" size={30} color="white" />
+            </LinearGradient>
+          </TouchableOpacity>
+        </Animated.View>
+
+        {currentSlide < slides.length - 1 && (
+          <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+            <AntDesign name="caretright" size={30} color="black" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  slidesContainer: {
     flexDirection: 'row',
     width: width * slides.length,
+    height,
+    backgroundColor: "gold",
+    flex: 1,
   },
   slide: {
     width,
-    height,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "brown",
+    flex: 1,
   },
   image: {
     width: '80%',
     height: '50%',
     resizeMode: 'contain',
+    backgroundColor: "yellow",
   },
   text: {
     fontSize: 20,
     marginTop: 20,
     textAlign: 'center',
+    color: '#ffffff',
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
+    justifyContent: 'space-between',
+  },
+  navButton: {
+    backgroundColor: '#78145a',
+    padding: 10,
+    borderRadius: 360,
+    width: 50, // largura fixa para os botões laterais
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  startButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50, // largura fixa para o botão do meio
+  },
+  gradientButton: {
+    borderRadius: 90,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
   },
 });
 

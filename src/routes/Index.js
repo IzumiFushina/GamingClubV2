@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from "@react-navigation/drawer";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 // IMPORTANDO PÁGINAS
 import Cadastro from "../pages/Cadastro";
@@ -9,13 +10,13 @@ import JogoDaMemoria from "../pages/JogoDaMemoria";
 import Login from "../pages/Login";
 import Quiz from "../pages/Quiz";
 import JogoMat from "../pages/JogoMat";
-import chess from "../pages/chess";
 import JogodaVelha from "../pages/JogodaVelha";
 import JogoPalavras from "../pages/JogoPalavras";
 import QuebraCabeca from "../pages/QuebraCabeca";
 import Catalogo from "../pages/Catalogo";
 import JogoDoClick from "../pages/JogoDoClick";
 import ChatScreen from "../pages/Chat";
+import OnboardingScreen from "../pages/Onbording";
 
 const Drawer = createDrawerNavigator();
 
@@ -23,15 +24,20 @@ const Drawer = createDrawerNavigator();
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
-      <View style={{ padding: 20, alignItems: 'center', }}>
-      <Image
-          source={require("../images/foto13.png")}
-          style={{ width: 65, height: 65 }}
-        />
-        <Text style={{ marginVertical: 10, fontWeight: 'bold', fontSize: 16 }}>Bem vindo ao</Text>
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>GamingClub</Text>
-      </View>
-      <DrawerItemList {...props} />
+      <LinearGradient
+        colors={['#010305', '#6d2173', '#010305']}
+        style={styles.gradient}
+      >
+        <View style={styles.drawerHeader}>
+          <Image
+            source={require("../images/GamingCLubRabbit.png")}
+            style={styles.profileImage}
+          />
+          <Text style={styles.welcomeText}>Bem-vindo ao</Text>
+          <Text style={styles.clubText}>GamingClub</Text>
+        </View>
+        <DrawerItemList {...props} />
+      </LinearGradient>
     </DrawerContentScrollView>
   );
 }
@@ -39,27 +45,109 @@ function CustomDrawerContent(props) {
 export default function Index() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator drawerContent={props => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name="Login" component={Login} />       
-        <Drawer.Screen name="Cadastro" component={Cadastro} /> 
-        <Drawer.Screen name="CampoMinado" component={CampoMinado} /> 
-        <Drawer.Screen name="JogoDaMemoria" component={JogoDaMemoria} />
-        <Drawer.Screen name="Quiz" component={Quiz} />
-        <Drawer.Screen name="JogoMat" component={JogoMat} />
-        <Drawer.Screen name="chess" component={chess} />
-        <Drawer.Screen name="JogodaVelha" component={JogodaVelha} />
-        <Drawer.Screen name="JogoPalavras" component={JogoPalavras} />
-        <Drawer.Screen name="QuebraCabeca" component={QuebraCabeca} />
-        <Drawer.Screen name="Catalogo" component={Catalogo} />
-        <Drawer.Screen name="Chat" component={ChatScreen} />
-        <Drawer.Screen name="JogoDoClick" component={JogoDoClick} />
-
+      <Drawer.Navigator   
+        screenOptions={{
+          drawerStyle: {
+            backgroundColor: '#000000',
+            width: "40%",
+          },
+          drawerLabelStyle: {
+            color: '#fafafa', // Mudar a cor do texto para branco
+          },
+        }} 
+        drawerContent={props => <CustomDrawerContent {...props} />}
+      >
+        <Drawer.Screen 
+          name="OnBoarding" 
+          component={OnboardingScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Login" 
+          component={Login} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Cadastro" 
+          component={Cadastro} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="CampoMinado" 
+          component={CampoMinado} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="JogoDaMemoria" 
+          component={JogoDaMemoria} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Quiz" 
+          component={Quiz} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="JogoMat" 
+          component={JogoMat} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="JogodaVelha" 
+          component={JogodaVelha} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="JogoPalavras" 
+          component={JogoPalavras} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="QuebraCabeca" 
+          component={QuebraCabeca} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Catalogo" 
+          component={Catalogo} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Chat" 
+          component={ChatScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="JogoDoClick" 
+          component={JogoDoClick} 
+          options={{ headerShown: false }} 
+        />
+        
       </Drawer.Navigator>
     </NavigationContainer>
   );
 }
 
-
-
-
-
+const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
+  drawerHeader: {
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+  },
+  welcomeText: {
+    marginVertical: 10,
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: "#b01782",
+  },
+  clubText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: "#b01782",
+  },
+});
