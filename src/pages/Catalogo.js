@@ -6,10 +6,13 @@ import Carousel from 'react-native-reanimated-carousel';
 const image1 = require('../images/anuncio1.png');
 const image2 = require('../images/anuncio2.png');
 const image3 = require('../images/anuncio3.png');
-const gameImage1 = require('../images/Campo(2).png'); // Exemplo de imagem para o primeiro jogo
-const gameImage2 = require('../images/velha.png'); // Exemplo de imagem para o segundo jogo
-const gameImage3 = require('../images/xadrez.png'); // Exemplo de imagem para o terceiro jogo
-// Continue importando imagens conforme necessário
+const gameImage1 = require('../images/Campo(2).png'); 
+const gameImage2 = require('../images/velha.png'); 
+const gameImage3 = require('../images/xadrez.png'); 
+const gameImage4 = require('../images/memoria (1).png'); 
+const gameImage5 = require('../images/xadrez.png'); 
+const gameImage6 = require('../images/xadrez.png'); 
+const gameImage7 = require('../images/xadrez.png'); 
 
 function Index({ navigation }) {
     const width = Dimensions.get('window').width;
@@ -23,10 +26,10 @@ function Index({ navigation }) {
         { id: 1, name: 'Campo Minado', route: 'CampoMinado', image: gameImage1 },
         { id: 2, name: 'Jogo da Velha', route: 'JogodaVelha', image: gameImage2 },
         { id: 3, name: 'Xadrez', route: 'chess', image: gameImage3 },
-        { id: 4, name: 'Jogo da Memória', route: 'JogoDaMemoria', image: gameImage3 },
-        { id: 5, name: 'Jogo das Palavras', route: 'JogoPalavras', image: gameImage3 },
-        { id: 6, name: 'Quiz', route: 'Quiz', image: gameImage3 },
-        { id: 7, name: 'Jogo de Matemática', route: 'JogoMat', image: gameImage3 },
+        { id: 4, name: 'Jogo da Memória', route: 'JogoDaMemoria', image: gameImage4 },
+        { id: 5, name: 'Jogo das Palavras', route: 'JogoPalavras', image: gameImage5 },
+        { id: 6, name: 'Quiz', route: 'Quiz', image: gameImage6 },
+        { id: 7, name: 'Jogo de Matemática', route: 'JogoMat', image: gameImage7 },
         // Adicione mais jogos e imagens aqui
     ];
 

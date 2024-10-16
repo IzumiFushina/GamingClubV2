@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, withSpring } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient'; 
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -39,11 +39,6 @@ const OnboardingScreen = () => {
     transform: [{ translateX: translateX.value }],
   }));
 
-  const buttonAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(currentSlide === slides.length - 1 ? 1 : 0, { duration: 300 }),
-    transform: [{ scale: withSpring(currentSlide === slides.length - 1 ? 1 : 0.8) }],
-  }));
-
   const handleStart = () => {
     navigation.navigate('Catalogo');
   };
@@ -69,7 +64,7 @@ const OnboardingScreen = () => {
           </TouchableOpacity>
         )}
 
-        <Animated.View style={buttonAnimatedStyle}>
+        {currentSlide === slides.length - 1 ? (
           <TouchableOpacity onPress={handleStart} style={styles.startButton}>
             <LinearGradient
               colors={['#000000', '#78145a', '#000000']}
@@ -78,9 +73,7 @@ const OnboardingScreen = () => {
               <FontAwesome5 name="door-open" size={30} color="white" />
             </LinearGradient>
           </TouchableOpacity>
-        </Animated.View>
-
-        {currentSlide < slides.length - 1 && (
+        ) : (
           <TouchableOpacity onPress={handleNext} style={styles.navButton}>
             <AntDesign name="caretright" size={30} color="black" />
           </TouchableOpacity>
@@ -134,14 +127,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#78145a',
     padding: 10,
     borderRadius: 360,
-    width: 50, // largura fixa para os botões laterais
+    width: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   startButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 50, // largura fixa para o botão do meio
+    width: 50,
   },
   gradientButton: {
     borderRadius: 90,
