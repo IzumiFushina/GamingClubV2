@@ -1,24 +1,26 @@
 import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "SUA_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_STORAGE_BUCKET",
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-  appId: "SEU_APP_ID",
+  apiKey: "AIzaSyAUeOyMTWw1obIUkRFxkFoPNJUBMrCjAQM",
+  authDomain: "gaming-club-5ee5b.firebaseapp.com",
+  projectId: "gaming-club-5ee5b",
+  storageBucket: "gaming-club-5ee5b.appspot.com",
+  messagingSenderId: "150338001978",
+  appId: "1:150338001978:android:57881c047b48af9e696903",
 };
 
 // Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
 
-// Inicializa o Auth com persistência
+// Inicializa o Auth com persistência usando AsyncStorage
 const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 
-// Exporta o auth para uso em outros arquivos
-export { auth };
+// Inicializa o Firestore
+const db = getFirestore(app);
+
+export { db, auth };

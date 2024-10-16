@@ -3,10 +3,13 @@ import { View, StyleSheet, Alert, Text, TextInput, TouchableOpacity, Animated, I
 import { BlurView } from 'expo-blur'; // Importando BlurView
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient'; 
-import AntDesign from '@expo/vector-icons/AntDesign';
-
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Importando as funções corretas do Firebase
+import { auth } from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
 
 export default function Cadastro() {
+  const [email, setEmail] = useState(''); // Estado para email
+  const [password, setPassword] = useState(''); // Estado para senha
+  const [username, setUsername] = useState(''); // Estado para username
   const translateY = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
@@ -24,6 +27,22 @@ export default function Cadastro() {
     })();
   }, []);
 
+  const handleSignUp = async () => {
+    try {
+      // Criar o usuário com email e senha
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Atualizar o perfil do usuário com o username
+      await updateProfile(user, { displayName: username });
+
+      Alert.alert('Sucesso', 'Conta criada com sucesso!');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground 
@@ -34,36 +53,38 @@ export default function Cadastro() {
         <BlurView intensity={50} style={styles.viewCds}>
           <TouchableOpacity style={styles.closeIcon} />
 
-          {/* Título "Login" e subtítulo */}
+          {/* Título "Cadastro" */}
           <Text style={styles.titleText}>Cadastro</Text>
 
           <Animated.View style={{ transform: [{ translateY }] }}>
             <View style={styles.inputContainer}>
-              
               <TextInput
                 style={styles.InputName}
                 placeholder="Username"
                 placeholderTextColor="white"
+                value={username}
+                onChangeText={setUsername} // Atualiza o estado de username
               />
             </View>
 
             <View style={styles.inputContainer}>
-              
               <TextInput
                 style={styles.InputMail}
-                placeholder="E-mail:"
+                placeholder="E-mail"
                 placeholderTextColor="white"
+                value={email}
+                onChangeText={setEmail} // Atualiza o estado de email
               />
-              
             </View>
              
-            {/* Aumentando a margem inferior do primeiro campo de entrada */}
             <View style={[styles.inputContainer, { marginBottom: 30 }]}>
               <TextInput
                 style={styles.InputName}
                 placeholder="Password"
                 placeholderTextColor="white"
                 secureTextEntry={true}
+                value={password}
+                onChangeText={setPassword} // Atualiza o estado de password
               />
             </View>
 
@@ -71,7 +92,7 @@ export default function Cadastro() {
               colors={['#2C2081', '#573299']} // Cores do gradiente
               style={styles.BtnCadastro}
             >
-              <TouchableOpacity onPress={() => Alert.alert('Cadastro Iniciado')}>
+              <TouchableOpacity onPress={handleSignUp}>
                 <Text style={styles.cdsButtonText}>Cadastrar</Text>
               </TouchableOpacity>
             </LinearGradient>

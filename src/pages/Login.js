@@ -4,19 +4,8 @@ import { BlurView } from 'expo-blur'; // Importando BlurView
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient'; 
 import AntDesign from '@expo/vector-icons/AntDesign';
-import firebase from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
-import { auth } from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
-
-const signIn = async () => {
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    // Lógica após login
-  } catch (error) {
-    console.error(error);
-    Alert.alert('Erro', error.message);
-  }
-};
-
+import { auth } from '../config/firebaseConfig'; // Certifique-se de importar o auth corretamente
+import { signInWithEmailAndPassword } from 'firebase/auth'; // Importa a função de login
 
 
 export default function Login() {
@@ -41,13 +30,14 @@ export default function Login() {
 
   const signIn = async () => {
     try {
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-      // Lógica após login
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      Alert.alert('Login realizado', `Bem-vindo ${user.email}!`);
     } catch (error) {
-      console.error(error);
-      Alert.alert('Erro', error.message); // Adiciona um alerta para mostrar o erro
-    }
+      Alert.alert('Erro', error.message);
+    };
   };
+
 
   return (
     <View style={styles.container}>
@@ -68,7 +58,7 @@ export default function Login() {
                 placeholder="User name"
                 placeholderTextColor="white"
                 value={email}
-                onChangeText={setEmail} // Atualiza o estado
+                onChangeText={setEmail} // Atualiza o estado do email
               />
             </View>
 
@@ -79,7 +69,7 @@ export default function Login() {
                 placeholderTextColor="white"
                 secureTextEntry={true}
                 value={password}
-                onChangeText={setPassword} // Atualiza o estado
+                onChangeText={setPassword} // Atualiza o estado da senha
               />
             </View>
 
@@ -104,8 +94,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 0,
     margin: 0,
-    alignItems: 'center', // Centraliza o conteúdo horizontalmente
-    justifyContent: 'center', // Centraliza o conteúdo verticalmente
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeIcon: {
     position: 'absolute',
@@ -122,15 +112,15 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: 'white', // Borda branca nos inputs
-    marginBottom: 15, // Reduzindo a margem inferior para os inputs
+    borderBottomColor: 'white',
+    marginBottom: 15,
   },
   InputName: {
     width: 290,
     height: 40,
-    color: 'white', // Texto branco nos inputs
+    color: 'white',
     paddingHorizontal: 5,
-    borderWidth: 0.5, // Borda branca nos inputs
+    borderWidth: 0.5,
     borderColor: 'white',
     borderRadius: 5,
   },
@@ -147,59 +137,58 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.3, // Aumentando a sombra
-    shadowRadius: 5, // Aumentando o raio da sombra
-    elevation: 8, // Aumentando a elevação
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   cdsButtonText: {
-    color: 'white', // Texto branco no botão
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
   },
   viewCds: {
-    height: '80%', // Aumentado o tamanho do card
-    width: '80%', // Aumentando a largura do card
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Efeito de transparência no card
+    height: '80%',
+    width: '80%',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 0.5, // Borda branca mais fina
-    borderColor: 'white', // Borda branca no card
+    borderWidth: 0.5,
+    borderColor: 'white',
     borderRadius: 45,
     overflow: 'hidden',
-    shadowColor: "#000", // Sombra para profundidade
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.3, // Sombra mais visível
-    shadowRadius: 5, // Aumentando o raio da sombra
-    elevation: 8, // Elevação para dar profundidade
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   titleText: {
-    color: 'white', // Cor do texto branco
-    fontSize: 24, // Tamanho da fonte do título
-    fontWeight: 'bold', // Negrito para o título
-    alignSelf: 'flex-start', // Alinha o texto à esquerda
-    marginLeft: 20, // Margem para distanciar da borda esquerda
-    marginTop: 20, // Margem superior para distanciar do topo
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    marginLeft: 20,
+    marginTop: 20,
   },
   subtitleText: {
-    color: 'white', // Texto branco
-    fontSize: 14, // Tamanho do texto do subtítulo
-    alignSelf: 'flex-start', // Alinha à esquerda
-    marginLeft: 20, // Margem esquerda para alinhar com o título
-    marginBottom: 20, // Margem inferior para dar espaço ao conteúdo
+    color: 'white',
+    fontSize: 14,
+    alignSelf: 'flex-start',
+    marginLeft: 20,
+    marginBottom: 20,
   },
   forgetPasswordText: {
-    color: 'white', // Texto em branco para manter a consistência
-    marginTop: 10, // Ajuste a margem superior para mais espaço se necessário
-    textDecorationLine: 'underline', // Adiciona um efeito de sublinhado
+    color: 'white',
+    marginTop: 10,
+    textDecorationLine: 'underline',
     alignSelf: 'center',
-   // Centraliza horizontalmente o texto
   },
   signUpText: {
-    color: 'white', // Texto em branco para manter a consistência
-    alignSelf: 'center', // Centraliza horizontalmente o texto
+    color: 'white',
+    alignSelf: 'center',
     marginTop: '100%',
     position: 'absolute',
   },  
