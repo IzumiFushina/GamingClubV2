@@ -58,24 +58,23 @@ const OnboardingScreen = () => {
       </Animated.View>
 
       <View style={styles.bottomContainer}>
-        {currentSlide > 0 && (
-          <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
-            <AntDesign name="caretleft" size={30} color="black" />
-          </TouchableOpacity>
-        )}
-
         {currentSlide === slides.length - 1 ? (
           <TouchableOpacity onPress={handleStart} style={styles.startButton}>
             <LinearGradient
               colors={['#000000', '#78145a', '#000000']}
               style={styles.gradientButton}
             >
-              <FontAwesome5 name="door-open" size={30} color="white" />
+              <FontAwesome5 name="door-open" size={20} color="white" />
             </LinearGradient>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={handleNext} style={styles.navButton}>
+          <TouchableOpacity onPress={handleNext} style={styles.navButtonRight}>
             <AntDesign name="caretright" size={30} color="black" />
+          </TouchableOpacity>
+        )}
+                {currentSlide > 0 && (
+          <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
+            <AntDesign name="caretleft" size={30} color="black" />
           </TouchableOpacity>
         )}
       </View>
@@ -93,21 +92,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: width * slides.length,
     height,
-    backgroundColor: "gold",
     flex: 1,
   },
   slide: {
     width,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: "brown",
     flex: 1,
   },
   image: {
     width: '80%',
     height: '50%',
     resizeMode: 'contain',
-    backgroundColor: "yellow",
   },
   text: {
     fontSize: 20,
@@ -118,8 +114,8 @@ const styles = StyleSheet.create({
   bottomContainer: {
     position: 'absolute',
     bottom: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row-reverse',
+    alignItems: 'right',
     width: '80%',
     justifyContent: 'space-between',
   },
@@ -131,6 +127,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  navButtonRight: {
+    backgroundColor: '#78145a',
+    padding: 10,
+    borderRadius: 360,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   startButton: {
     alignItems: 'center',
     justifyContent: 'center',

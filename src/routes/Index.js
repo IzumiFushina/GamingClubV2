@@ -17,6 +17,7 @@ import Catalogo from "../pages/Catalogo";
 import JogoDoClick from "../pages/JogoDoClick";
 import ChatScreen from "../pages/Chat";
 import OnboardingScreen from "../pages/Onbording";
+import Sound from "../pages/soundtest";
 
 const Drawer = createDrawerNavigator();
 
@@ -65,6 +66,11 @@ export default function Index() {
         <Drawer.Screen 
           name="Login" 
           component={Login} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="Sound" 
+          component={Sound} 
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 
