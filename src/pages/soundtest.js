@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Button, Alert } from 'react-native';
 import { Audio } from 'expo-av';
 
 export default function App() {
@@ -7,12 +7,27 @@ export default function App() {
 
   async function playSound() {
     console.log('Loading Sound');
-    const { sound } = await Audio.Sound.createAsync( require('../sounds/SoundTest.mp3')
+    
+    // Tente usar um arquivo de áudio de teste da URL
+    const { sound: newSound } = await Audio.Sound.createAsync(
+      // Altere para o seu arquivo local se necessário
+      require('../sounds/SoundTest.mp3') // Ou use uma URL para testar
     );
-    setSound(sound);
 
+    setSound(newSound);
     console.log('Playing Sound');
-    await sound.playAsync();
+    
+    // Reproduza o som
+    await newSound.playAsync();
+
+    // Adiciona um listener para descarregar o som após a reprodução
+    newSound.setOnPlaybackStatusUpdate(status => {
+      if (status.didJustFinish) {
+        console.log('Sound finished playing');
+        newSound.unloadAsync();
+        setSound(undefined);
+      }
+    });
   }
 
   useEffect(() => {

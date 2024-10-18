@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
 import * as Progress from 'react-native-progress'; // Importa a biblioteca de progresso
 
 export default function App() {
@@ -22,6 +22,16 @@ export default function App() {
           respostas: ['Vincent van Gogh', 'Leonardo da Vinci', 'Pablo Picasso', 'Claude Monet'],
           respostaCorreta: 'Leonardo da Vinci',
         },
+        {
+          pergunta: 'Qual é o continente mais populoso?',
+          respostas: ['África', 'Ásia', 'Europa', 'América'],
+          respostaCorreta: 'Ásia',
+        },
+        {
+          pergunta: 'Quantos estados tem o Brasil?',
+          respostas: ['25', '26', '27', '30'],
+          respostaCorreta: '26',
+        },
       ],
     },
     {
@@ -42,7 +52,16 @@ export default function App() {
           respostas: ['Tsunamis', 'Tornados', 'Terremotos', 'Furacões'],
           respostaCorreta: 'Terremotos',
         },
-        
+        {
+          pergunta: 'Qual é a fórmula química da água?',
+          respostas: ['H2O', 'CO2', 'O2', 'NaCl'],
+          respostaCorreta: 'H2O',
+        },
+        {
+          pergunta: 'Qual é a capital da França?',
+          respostas: ['Paris', 'Londres', 'Berlim', 'Madrid'],
+          respostaCorreta: 'Paris',
+        },
       ],
     },
     {
@@ -63,7 +82,16 @@ export default function App() {
           respostas: ['A é maior que C.', 'C é maior que A.', 'B é menor que A.', 'A é igual a C.'],
           respostaCorreta: 'A é maior que C.',
         },
-        
+        {
+          pergunta: 'Qual é a capital do Japão?',
+          respostas: ['Tóquio', 'Pequim', 'Seul', 'Bangkok'],
+          respostaCorreta: 'Tóquio',
+        },
+        {
+          pergunta: 'Qual foi o ano em que o homem pisou na Lua?',
+          respostas: ['1969', '1972', '1980', '1990'],
+          respostaCorreta: '1969',
+        },
       ],
     },
     {
@@ -84,21 +112,30 @@ export default function App() {
           respostas: ['Aumento da agricultura.', 'Desenvolvimento do capitalismo e urbanização.', 'Declínio da ciência.', 'Redução das trocas comerciais.'],
           respostaCorreta: 'Desenvolvimento do capitalismo e urbanização.',
         },
-        
+        {
+          pergunta: 'Qual é a fórmula da energia cinética?',
+          respostas: ['E = mc²', 'E = 1/2 mv²', 'E = Fd', 'E = mgh'],
+          respostaCorreta: 'E = 1/2 mv²',
+        },
+        {
+          pergunta: 'Qual é o elemento químico com símbolo "Fe"?',
+          respostas: ['Ferro', 'Flúor', 'Fósforo', 'Prata'],
+          respostaCorreta: 'Ferro',
+        },
       ],
     },
-    // Níveis seguintes...
+    // Adicione mais níveis se desejar...
   ];
 
   const [indiceAtual, setIndiceAtual] = useState(0);
-  const [nivelAtual, setNivelAtual] = useState(0); // Controla o nível
+  const [nivelAtual, setNivelAtual] = useState(0);
   const [respostaSelecionada, setRespostaSelecionada] = useState(null);
   const [pontuacao, setPontuacao] = useState(0);
 
   const handleAnswer = (resposta) => {
     setRespostaSelecionada(resposta);
     const perguntaAtual = niveis[nivelAtual].perguntas[indiceAtual];
-    
+
     if (resposta === perguntaAtual.respostaCorreta) {
       setPontuacao(pontuacao + 1);
     } else {
@@ -121,69 +158,74 @@ export default function App() {
     }
   };
 
-  const progresso = (indiceAtual + 1) / niveis[nivelAtual].perguntas.length; // Progresso da barra
+  const progresso = (indiceAtual + 1) / niveis[nivelAtual].perguntas.length;
 
   return (
-    <View style={styles.container}>
-      {/* Banner do topo */}
-      <View style={styles.banner}>
-        <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
-      </View>
+    <ImageBackground
+      source={require('../images/BackgroundQuebraCabeça.png')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <View style={styles.banner}>
+          <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
+        </View>
 
-      {/* Barra de Progresso */}
-      <Progress.Bar 
-        progress={progresso} 
-        width={300} 
-        color="#4fa3e3" 
-        style={styles.progressBar}
-      />
+        <Progress.Bar 
+          progress={progresso} 
+          width={300} 
+          color="#903799" 
+          style={styles.progressBar}
+        />
 
-      {/* Pergunta */}
-      <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>
-          {niveis[nivelAtual].perguntas[indiceAtual].pergunta}
-        </Text>
-      </View>
+        <View style={styles.questionContainer}>
+          <Text style={styles.questionText}>
+            {niveis[nivelAtual].perguntas[indiceAtual].pergunta}
+          </Text>
+        </View>
 
-      {/* Respostas */}
-      <View style={styles.answersContainer}>
-        {niveis[nivelAtual].perguntas[indiceAtual].respostas.map((resposta, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.answerButton,
-              respostaSelecionada === resposta && {
-                backgroundColor: resposta === niveis[nivelAtual].perguntas[indiceAtual].respostaCorreta ? '#4CAF50' : '#F44336',
-              },
-            ]}
-            onPress={() => handleAnswer(resposta)}
-            disabled={respostaSelecionada !== null}
-          >
-            <Text style={styles.answerText}>{resposta}</Text>
+        <View style={styles.answersContainer}>
+          {niveis[nivelAtual].perguntas[indiceAtual].respostas.map((resposta, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[
+                styles.answerButton,
+                respostaSelecionada === resposta && {
+                  backgroundColor: resposta === niveis[nivelAtual].perguntas[indiceAtual].respostaCorreta ? '#4CAF50' : '#F44336',
+                },
+              ]}
+              onPress={() => handleAnswer(resposta)}
+              disabled={respostaSelecionada !== null}
+            >
+              <Text style={styles.answerText}>{resposta}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {respostaSelecionada && (
+          <TouchableOpacity style={styles.nextButton} onPress={proximaPergunta}>
+            <Text style={styles.nextButtonText}>Próxima Pergunta</Text>
           </TouchableOpacity>
-        ))}
+        )}
       </View>
-
-      {/* Botão Próxima */}
-      {respostaSelecionada && (
-        <TouchableOpacity style={styles.nextButton} onPress={proximaPergunta}>
-          <Text style={styles.nextButtonText}>Próxima Pergunta</Text>
-        </TouchableOpacity>
-      )}
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
     padding: 20,
   },
   banner: {
-    backgroundColor: '#4fa3e3',
+    backgroundColor: '#903799',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -238,7 +280,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   nextButton: {
-    backgroundColor: '#4fa3e3',
+    backgroundColor: '#903799',
     padding: 15,
     marginTop: 20,
     borderRadius: 12,

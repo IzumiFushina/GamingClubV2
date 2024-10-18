@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native';
 
 const generateCards = () => {
-  const cards = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍒', '🍑', '🍍', '🥝', '🥭','🥥','🍊','🍐','🍋' ];
+  const cards = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍒', '🍑', '🍍', '🥝', '🥭', '🥥', '🍊', '🍐', '🍋'];
   const duplicatedCards = [...cards, ...cards];
   return duplicatedCards.sort(() => 0.5 - Math.random());
 };
@@ -44,37 +43,36 @@ const App = () => {
     const isFlipped = selectedCards.includes(index) || matchedCards.includes(index);
     return (
       <TouchableOpacity
-  key={index}
-  style={styles.card}
-  onPress={() => handleCardPress(index)}
->
-  {isFlipped ? (
-    <Text style={styles.cardText}>{item}</Text>
-  ) : (
-    <Image 
-      source={require('../images/foto13.png')} // Caminho local da imagem
-      style={styles.cardImage}
-    />
-  )}
-</TouchableOpacity>
-
+        key={index}
+        style={styles.card}
+        onPress={() => handleCardPress(index)}
+      >
+        {isFlipped ? (
+          <Text style={styles.cardText}>{item}</Text>
+        ) : (
+          <Image
+            source={require('../images/foto13.png')} // Caminho local da imagem
+            style={styles.cardImage}
+          />
+        )}
+      </TouchableOpacity>
     );
   };
 
   return (
-    <LinearGradient
-    colors={['#fdf5cd', '#ffeb85', '#ffd885']}
-    style={styles.gradient}
-  >
-    <View style={styles.container}>
-      <View style={styles.board}>
-        {cards.map((item, index) => renderCard(item, index))}
+    <ImageBackground
+      source={require('../images/BackgroundQuebraCabeça.png')} // Imagem de fundo
+      style={styles.background}
+    >
+      <View style={styles.container}>
+        <View style={styles.board}>
+          {cards.map((item, index) => renderCard(item, index))}
+        </View>
+        <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
+          <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
-        <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
-      </TouchableOpacity>
-    </View>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
@@ -84,9 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  gradient: {
+  background: {
     flex: 1,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   board: {
@@ -105,14 +103,13 @@ const styles = StyleSheet.create({
     marginLeft: 13,
   },
   cardImage: {
-  width: 80,
-  height: 80,
-  borderRadius: 10,
+    width: 80,
+    height: 80,
+    borderRadius: 10,
   },
-  
   cardText: {
     fontSize: 36,
-    color: '#red',
+    color: 'red', // Corrigi o valor de cor de 'red' para 'red' (sem aspas simples)
   },
   resetButton: {
     marginTop: 20,

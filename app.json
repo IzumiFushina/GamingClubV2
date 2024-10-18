@@ -10,9 +10,13 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+      
     },
     "ios": {
       "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["audio"]
+    },
       "bundleIdentifier": "com.clubgamingfruv.app" 
     },
     "android": {
@@ -24,6 +28,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ]
+    ]
   }
+  
 }

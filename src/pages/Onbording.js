@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { View, Text, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
@@ -9,8 +11,8 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 const { width, height } = Dimensions.get('window');
 
 const slides = [
-  { image: require('../images/avatar.png'), text: 'Bem-vindo ao Gaming Club!' },
-  { image: require('../images/Gaming Club.png'), text: 'Descubra novos jogos!' },
+  { image: require('../images/avatar.png'), text: 'Bem-vindo ao Gaming Club!!' },
+  { image: require('../images/Gaming Club.png'), text: 'Bem vindo ao Gaming Club!' },
   { image: require('../images/galaxy.jpg'), text: 'Comece sua jornada agora!' },
 ];
 
@@ -45,23 +47,26 @@ const OnboardingScreen = () => {
 
   return (
     <LinearGradient
-      colors={['#121c69', '#0e1e2b']}
+      colors={['#573299', '#121c69']}
       style={styles.container}
     >
-      <Animated.View style={[styles.slidesContainer, animatedStyle]}>
-        {slides.map((slide, index) => (
-          <View key={index} style={styles.slide}>
-            <Image source={slide.image} style={styles.image} />
-            <Text style={styles.text}>{slide.text}</Text>
-          </View>
-        ))}
-      </Animated.View>
+     <Animated.View style={[styles.slidesContainer, animatedStyle]}>
+  {slides.map((slide, index) => (
+    <View key={index} style={styles.slide}>
+      <Image source={slide.image} style={styles.image} />
+      <Text style={styles.text}>{slide.text}</Text>
+      {index === 1 && ( 
+        <Text style={styles.welcomeText}>Descubra novos jogos do nosso app!</Text> 
+      )}
+    </View>
+  ))}
+</Animated.View>
 
       <View style={styles.bottomContainer}>
         {currentSlide === slides.length - 1 ? (
           <TouchableOpacity onPress={handleStart} style={styles.startButton}>
             <LinearGradient
-              colors={['#000000', '#78145a', '#000000']}
+              colors={['#000000', '#78145a']}
               style={styles.gradientButton}
             >
               <FontAwesome5 name="door-open" size={20} color="white" />
@@ -146,6 +151,13 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 15,
   },
+    welcomeText: {
+      fontSize: 18,
+      color: '#fff',
+      marginTop: 10,
+      textAlign: 'center',
+    },
+    // ... seus outros estilos  
 });
 
 export default OnboardingScreen;

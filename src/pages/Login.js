@@ -41,6 +41,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
+      
       <ImageBackground 
         source={require('../images/fundoagain.png')} 
         style={styles.background} 
