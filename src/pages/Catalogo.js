@@ -39,10 +39,10 @@ function Index({ navigation }) {
     };
 
     return (
-        <View style={{ flex: 1, marginTop: 20 }}>
+        <View style={{ flex: 1, marginTop: 20, backgroundColor: '#14012b', }}>
             <ScrollView>
 
-                <Text style={{ fontSize: 25, marginBottom: 20 }}>Bem vindo ao GamingClub!!</Text>
+                <Text style={{ fontSize: 25, marginBottom: 20, color: "#b01782", }}>Bem vindo ao GamingClub!!</Text>
 
                 <Carousel
                     loop
@@ -62,7 +62,7 @@ function Index({ navigation }) {
                     )}
                 />
 
-                <Text style={{ fontSize: 25, marginTop: 40, marginBottom: 20 }}>Todos os jogos</Text>
+                <Text style={{ fontSize: 25, marginTop: 40, marginBottom: 20, color: "#b01782", }}>Todos os jogos</Text>
 
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
                     {/* Quadrados de jogos com imagens */}
@@ -79,7 +79,7 @@ function Index({ navigation }) {
                     ))}
                 </ScrollView>
 
-                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15 }}>TESTE</Text>
+                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15, color: "#b01782", }}>TESTE</Text>
 
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 5 }}>
                     {/* Outros quadradinhos sem jogos associados */}
@@ -88,7 +88,7 @@ function Index({ navigation }) {
                     ))}
                 </ScrollView>
 
-                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15 }}>TESTE</Text>
+                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15, color: "#b01782", }}>TESTE</Text>
 
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 5 }}>
                     {/* Mais quadradinhos sem jogos associados */}
