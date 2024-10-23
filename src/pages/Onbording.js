@@ -47,7 +47,7 @@ const OnboardingScreen = () => {
 
   return (
     <LinearGradient
-      colors={['#573299', '#121c69']}
+      colors={['#573299', '#121c69',]}
       style={styles.container}
     >
      <Animated.View style={[styles.slidesContainer, animatedStyle]}>
@@ -65,7 +65,7 @@ const OnboardingScreen = () => {
       <View style={styles.bottomContainer}>
         {currentSlide === slides.length - 1 ? (
           <TouchableOpacity onPress={handleStart} style={styles.startButton}>
-            <LinearGradient
+            <LinearGradient 
               colors={['#000000', '#78145a']}
               style={styles.gradientButton}
             >
@@ -92,6 +92,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    transform: [{rotateX: '0deg'}, {rotateZ: '0deg'}],
   },
   slidesContainer: {
     flexDirection: 'row',
