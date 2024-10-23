@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Dimensions, Image, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import PagerView from 'react-native-pager-view';
 import Carousel from 'react-native-reanimated-carousel';
 
 // Importe suas imagens locais

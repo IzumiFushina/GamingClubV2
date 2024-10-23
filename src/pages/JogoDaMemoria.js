@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Modal, Animated } from 'react-native';
 
 const generateCards = () => {
-  const cards = ['🍎', '🍌', '🍇', '🍓', '🍉', '🍒', '🍑', '🍍', '🥝', '🥭', '🥥', '🍊', '🍐', '🍋'];
+  const cards = ['😴', '🤯', '😱', '🤭', '😢', '🫨', '😡', '🥰', '🤩', '😂', '🤢', '😝'];
   const duplicatedCards = [...cards, ...cards];
   return duplicatedCards.sort(() => 0.5 - Math.random());
 };
@@ -11,6 +11,10 @@ const App = () => {
   const [cards, setCards] = useState(generateCards());
   const [selectedCards, setSelectedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rotation] = useState(new Animated.Value(0)); // Animação de rotação
+  const [time, setTime] = useState(0); // Contador de tempo
+  const [isPlaying, setIsPlaying] = useState(false); // Para controlar o temporizador
 
   useEffect(() => {
     if (selectedCards.length === 2) {
@@ -19,7 +23,8 @@ const App = () => {
         setMatchedCards([...matchedCards, firstIndex, secondIndex]);
         setSelectedCards([]);
         if (matchedCards.length + 2 === cards.length) {
-          Alert.alert('Parabéns!', 'Você encontrou todos os pares!');
+          setModalVisible(true); // Exibe o modal ao completar o jogo
+          setIsPlaying(false); // Para o temporizador
         }
       } else {
         setTimeout(() => setSelectedCards([]), 1000);
@@ -27,35 +32,62 @@ const App = () => {
     }
   }, [selectedCards]);
 
+  useEffect(() => {
+    let timer;
+    if (isPlaying) {
+      timer = setInterval(() => {
+        setTime(prevTime => prevTime + 1); // Atualiza o tempo
+      }, 1000); // Atualiza a cada segundo
+    }
+    return () => clearInterval(timer); // Limpa o timer ao desmontar
+  }, [isPlaying]);
+
   const handleCardPress = (index) => {
     if (selectedCards.length < 2 && !selectedCards.includes(index) && !matchedCards.includes(index)) {
       setSelectedCards([...selectedCards, index]);
     }
   };
 
-  const resetGame = () => {
-    setCards(generateCards());
-    setSelectedCards([]);
-    setMatchedCards([]);
+  const shuffleCards = () => {
+    // Animação de rotação para simular o embaralhamento das cartas
+    Animated.timing(rotation, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => {
+      setCards(generateCards());
+      setSelectedCards([]);
+      setMatchedCards([]);
+      rotation.setValue(0); // Reseta a rotação após o embaralhamento
+      setTime(0); // Reseta o tempo ao embaralhar
+      setIsPlaying(true); // Começa a contagem do tempo
+    });
   };
 
   const renderCard = (item, index) => {
     const isFlipped = selectedCards.includes(index) || matchedCards.includes(index);
+
+    const rotateY = rotation.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'], // Rotação de 360 graus
+    });
+
     return (
-      <TouchableOpacity
-        key={index}
-        style={styles.card}
-        onPress={() => handleCardPress(index)}
-      >
-        {isFlipped ? (
-          <Text style={styles.cardText}>{item}</Text>
-        ) : (
-          <Image
-            source={require('../images/foto13.png')} // Caminho local da imagem
-            style={styles.cardImage}
-          />
-        )}
-      </TouchableOpacity>
+      <Animated.View style={{ transform: [{ rotateY }] }} key={index}>
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => handleCardPress(index)}
+        >
+          {isFlipped ? (
+            <Text style={styles.cardText}>{item}</Text>
+          ) : (
+            <Image
+              source={require('../images/jogodamemoria.png')} // Caminho local da imagem
+              style={styles.cardImage}
+            />
+          )}
+        </TouchableOpacity>
+      </Animated.View>
     );
   };
 
@@ -65,12 +97,30 @@ const App = () => {
       style={styles.background}
     >
       <View style={styles.container}>
+        <Text style={styles.title}>Jogo Da Memória</Text>
+        <Text style={styles.timer}>Tempo: {time} segundos</Text>
         <View style={styles.board}>
           {cards.map((item, index) => renderCard(item, index))}
         </View>
-        <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
-          <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+
+        {/* Botão de Embaralhar */}
+        <TouchableOpacity onPress={shuffleCards} style={styles.shuffleButton}>
+          <Text style={styles.shuffleButtonText}>Embaralhar</Text>
         </TouchableOpacity>
+
+        {/* Modal de vitória */}
+        <Modal visible={modalVisible} transparent={true} animationType="slide">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image source={require('../images/medalha.png')} style={styles.medalImage} />
+              <Text style={styles.modalText}>Parabéns! Você encontrou todos os pares!</Text>
+              <Text style={styles.modalText}>Tempo total: {time} segundos</Text>
+              <TouchableOpacity onPress={() => { setModalVisible(false); shuffleCards(); }} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>Reiniciar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ImageBackground>
   );
@@ -87,10 +137,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajuste a opacidade conforme necessário
+  },
   board: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: 390,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    marginTop: 25,
+    color: '#DB73B7',
+  },
+  timer: {
+    fontSize: 18,
+    color: 'white',
+    marginBottom: 20,
   },
   card: {
     width: 80,
@@ -98,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 2.5,
-    backgroundColor: '#f6db6e',
+    backgroundColor: '#BA52AD',
     borderRadius: 10,
     marginLeft: 13,
   },
@@ -109,15 +179,47 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 36,
-    color: 'red', // Corrigi o valor de cor de 'red' para 'red' (sem aspas simples)
+    color: 'red',
   },
-  resetButton: {
+  shuffleButton: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#f8cf54',
+    backgroundColor: '#BA52AD',
     borderRadius: 5,
   },
-  resetButtonText: {
+  shuffleButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    padding: 40,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  medalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButton: {
+    backgroundColor: '#BA52AD',
+    padding: 10,
+    borderRadius: 5,
+  },
+  modalButtonText: {
     color: '#fff',
     fontWeight: 'bold',
   },

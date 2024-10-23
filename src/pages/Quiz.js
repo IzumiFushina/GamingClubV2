@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, Modal, } from 'react-native';
 import * as Progress from 'react-native-progress'; // Importa a biblioteca de progresso
 
 export default function App() {
@@ -127,10 +127,12 @@ export default function App() {
     // Adicione mais níveis se desejar...
   ];
 
+  
   const [indiceAtual, setIndiceAtual] = useState(0);
   const [nivelAtual, setNivelAtual] = useState(0);
   const [respostaSelecionada, setRespostaSelecionada] = useState(null);
   const [pontuacao, setPontuacao] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleAnswer = (resposta) => {
     setRespostaSelecionada(resposta);
@@ -151,14 +153,18 @@ export default function App() {
       setIndiceAtual(0);
       setNivelAtual(nivelAtual + 1);
     } else {
-      alert(`Quiz finalizado! Você acertou ${pontuacao} perguntas.`);
-      setIndiceAtual(0);
-      setNivelAtual(0);
-      setPontuacao(0);
+      setModalVisible(true);
     }
   };
 
   const progresso = (indiceAtual + 1) / niveis[nivelAtual].perguntas.length;
+
+  const resetGame = () => {
+    setIndiceAtual(0);
+    setNivelAtual(0);
+    setPontuacao(0);
+    setModalVisible(false);
+  };
 
   return (
     <ImageBackground
@@ -171,10 +177,10 @@ export default function App() {
           <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
         </View>
 
-        <Progress.Bar 
-          progress={progresso} 
-          width={300} 
-          color="#903799" 
+        <Progress.Bar
+          progress={progresso}
+          width={300}
+          color="#903799"
           style={styles.progressBar}
         />
 
@@ -207,6 +213,28 @@ export default function App() {
             <Text style={styles.nextButtonText}>Próxima Pergunta</Text>
           </TouchableOpacity>
         )}
+
+        {/* Modal para exibir a medalha e pontuação */}
+        <Modal
+          visible={modalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={resetGame}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image
+                source={require("../images/medalha.png")} // Caminho da imagem da medalha
+                style={styles.medalImage}
+              />
+              <Text style={styles.modalText}>Parabéns!</Text>
+              <Text style={styles.modalScore}>Você acertou {pontuacao} perguntas!</Text>
+              <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+                <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ImageBackground>
   );
@@ -291,6 +319,45 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   nextButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  // Estilos para o modal
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 30,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalScore: {
+    fontSize: 20,
+    color: '#333',
+    marginBottom: 20,
+  },
+  medalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  resetButton: {
+    backgroundColor: '#903799',
+    padding: 15,
+    borderRadius: 12,
+  },
+  resetButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',

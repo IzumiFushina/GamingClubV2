@@ -20,7 +20,7 @@ const TicTacToe = () => {
   const [currentPlayer, setCurrentPlayer] = useState(0);
   const [gameBoard, setGameBoard] = useState(Array(9).fill(''));
   const [gameActive, setGameActive] = useState(true);
-  const [status, setStatus] = useState(`Player ${GG_ALL_GAME_CONFIG.playerSymbols[currentPlayer]}'s turn`);
+  const [status, setStatus] = useState(`Vez do jogador ${GG_ALL_GAME_CONFIG.playerSymbols[currentPlayer]}`);
 
   const handleCellPress = (index) => {
     if (gameBoard[index] === '' && gameActive) {
@@ -37,7 +37,7 @@ const TicTacToe = () => {
       } else {
         const nextPlayer = 1 - currentPlayer;
         setCurrentPlayer(nextPlayer);
-        setStatus(`Player ${GG_ALL_GAME_CONFIG.playerSymbols[nextPlayer]}'s turn`);
+        setStatus(`Vez do jogador ${GG_ALL_GAME_CONFIG.playerSymbols[nextPlayer]}`);
       }
     }
   };

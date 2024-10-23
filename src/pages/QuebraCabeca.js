@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground, Modal, Image } from 'react-native';
 
 const App = () => {
   const [board, setBoard] = useState([]);
@@ -7,6 +7,7 @@ const App = () => {
   const [moves, setMoves] = useState(0); // Contador de movimentos
   const [time, setTime] = useState(0); // Contador de tempo
   const [isPlaying, setIsPlaying] = useState(false); // Para controlar o temporizador
+  const [gameWon, setGameWon] = useState(false); // Para controlar a exibição do modal
 
   useEffect(() => {
     initializeBoard(); // Inicializa o tabuleiro ao montar o componente
@@ -29,6 +30,7 @@ const App = () => {
     setMoves(0); // Reseta o contador de movimentos
     setTime(0); // Reseta o tempo
     setIsPlaying(true); // Começa a contagem do tempo
+    setGameWon(false); // Reseta o status de vitória
   };
 
   const shuffle = (array) => {
@@ -69,16 +71,7 @@ const App = () => {
   const checkWin = (newBoard) => {
     if (newBoard.every((value, index) => value === (index < 15 ? index + 1 : ''))) {
       setIsPlaying(false); // Para a contagem do tempo
-      Alert.alert('Parabéns!', `Você completou o quebra-cabeça em ${time} segundos com ${moves} movimentos!`, [
-        {
-          text: 'Reiniciar',
-          onPress: () => initializeBoard(), // Reinicia o jogo
-        },
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-      ]);
+      setGameWon(true); // Mostra o modal com a vitória
     }
   };
 
@@ -105,6 +98,27 @@ const App = () => {
         <TouchableOpacity style={styles.shuffleButton} onPress={randomizeBoard}>
           <Text style={styles.buttonText}>Embaralhar</Text>
         </TouchableOpacity>
+
+        {/* Modal de vitória */}
+        <Modal
+          transparent={true}
+          visible={gameWon}
+          animationType="slide"
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image
+                source={require('../images/medalha.png')} // Adicione o caminho da imagem da medalha
+                style={styles.medalImage}
+              />
+              <Text style={styles.congratulationsText}>Parabéns!</Text>
+              <Text style={styles.congratulationsText}>Você completou o Quebra-Cabeça!</Text>
+              <TouchableOpacity style={styles.resetButton} onPress={initializeBoard}>
+                <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ImageBackground>
   );
@@ -163,6 +177,41 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: '#fff',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.7)', // Fundo escurecido
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  medalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  congratulationsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  resetButton: {
+    backgroundColor: '#BA52AD',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  resetButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
 

@@ -18,6 +18,9 @@ import JogoDoClick from "../pages/JogoDoClick";
 import ChatScreen from "../pages/Chat";
 import OnboardingScreen from "../pages/Onbording";
 import Sound from "../pages/soundtest";
+import MyPager from "../pages/PagerView";
+import OnboardingV2 from "../pages/OnBoardingV2";
+import CatalogoV2 from "../pages/CatalogoV2";
 
 const Drawer = createDrawerNavigator();
 
@@ -47,6 +50,7 @@ export default function Index() {
   return (
     <NavigationContainer>
       <Drawer.Navigator   
+        initialRouteName="OnBoardingV2" // Define a tela inicial
         screenOptions={{
           drawerStyle: {
             backgroundColor: '#000000',
@@ -64,6 +68,16 @@ export default function Index() {
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 
+          name="OnBoardingV2" 
+          component={OnboardingV2} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="MyPager" 
+          component={MyPager} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
           name="Login" 
           component={Login} 
           options={{ headerShown: false }} 
@@ -76,6 +90,11 @@ export default function Index() {
         <Drawer.Screen 
           name="Cadastro" 
           component={Cadastro} 
+          options={{ headerShown: false }} 
+        />
+        <Drawer.Screen 
+          name="CatalogoV2" 
+          component={CatalogoV2} 
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 
