@@ -21,6 +21,8 @@ import Sound from "../pages/soundtest";
 import MyPager from "../pages/PagerView";
 import OnboardingV2 from "../pages/OnBoardingV2";
 import CatalogoV2 from "../pages/CatalogoV2";
+import TesteDeVide from "../pages/VídeoTest.Js";
+import TestComponent from "../pages/TestComponent";
 
 const Drawer = createDrawerNavigator();
 
@@ -70,6 +72,16 @@ export default function Index() {
         <Drawer.Screen 
           name="OnBoardingV2" 
           component={OnboardingV2} 
+          options={{ headerShown: false }} 
+        />
+                <Drawer.Screen 
+          name="TesteComponent" 
+          component={TestComponent} 
+          options={{ headerShown: false }} 
+        />
+                <Drawer.Screen 
+          name="TesteDeVide" 
+          component={TesteDeVide} 
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 

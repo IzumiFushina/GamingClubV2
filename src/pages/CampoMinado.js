@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
 import { Audio } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const BOARD_SIZE = 8;
 const MINES_COUNT = 10;
 
+const START_DEFAULT = { x: 0.5, y: 0 };
+const END_DEFAULT = { x: 0.5, y: 1 };
+const GRADIENT_COLORS = ["#1d335c", "#251d5c", "#16094f", "#411861", "#502569", "#502569", "#35094f"];
+const GRADIENT_LOCATIONS = [0, 0.2, 0.4, 0.6, 0.8, 1, 1];
+const MOVEMENT = GRADIENT_LOCATIONS[1] / 20;
+const INTERVAL = 30;
+
+let timeout = undefined;
+
 const generateBoard = () => {
-  const board = Array(BOARD_SIZE)
-    .fill(null)
-    .map(() => Array(BOARD_SIZE).fill({ isRevealed: false, isMine: false, neighboringMines: 0, isFlagged: false }));
+  const board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill({
+    isRevealed: false, isMine: false, neighboringMines: 0, isFlagged: false
+  }));
 
   let minesPlanted = 0;
   while (minesPlanted < MINES_COUNT) {
@@ -63,18 +72,58 @@ const App = () => {
   const [sound, setSound] = useState();
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
+  const [gradientOptions, setGradientOptions] = useState({
+    colors: GRADIENT_COLORS,
+    locations: GRADIENT_LOCATIONS,
+    start: START_DEFAULT,
+    end: END_DEFAULT
+  });
+  const gradientOptionsRef = useRef(gradientOptions);
+  gradientOptionsRef.current = gradientOptions;
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 1000,
       useNativeDriver: true,
     }).start();
+
+    infiniteRainbow();
+    return () => clearTimeout(timeout);
   }, []);
+
+  const infiniteRainbow = () => {
+    if (gradientOptionsRef.current.locations[1] - MOVEMENT <= 0) {
+      let gradientColors = [...gradientOptionsRef.current.colors];
+      gradientColors.shift();
+      gradientColors.push(gradientColors[1]);
+
+      setGradientOptions({
+        colors: gradientColors,
+        locations: GRADIENT_LOCATIONS,
+        start: START_DEFAULT,
+        end: END_DEFAULT
+      });
+    } else {
+      const updatedLocations = gradientOptionsRef.current.locations.map((item, index) => {
+        if (index === gradientOptionsRef.current.locations.length - 1) return 1;
+        return parseFloat(Math.max(0, item - MOVEMENT).toFixed(2));
+      });
+
+      setGradientOptions({
+        colors: [...gradientOptionsRef.current.colors],
+        locations: updatedLocations,
+        start: START_DEFAULT,
+        end: END_DEFAULT
+      });
+    }
+    timeout = setTimeout(infiniteRainbow, INTERVAL);
+  };
 
   const playSound = async () => {
     if (!sound) {
       const { sound: newSound } = await Audio.Sound.createAsync(
-        require('../sounds/Campo Minado.mp3') // Adicione o caminho correto para sua música
+        require('../sounds/Campo Minado.mp3')
       );
       setSound(newSound);
       await newSound.setIsLoopingAsync(true);
@@ -85,7 +134,7 @@ const App = () => {
   const stopSound = async () => {
     if (sound) {
       await sound.stopAsync();
-      setSound(undefined); // Limpa a referência do som
+      setSound(undefined);
     }
   };
 
@@ -104,14 +153,14 @@ const App = () => {
     } else {
       if (square.isMine) {
         setGameOver(true);
-        await stopSound(); // Para a música ao perder
+        await stopSound();
         Alert.alert('Game Over', 'Você clicou em uma mina!');
         revealBoard(newBoard);
       } else {
         revealSquare(newBoard, row, col);
         if (checkWin(newBoard)) {
           setGameWon(true);
-          await stopSound(); // Para a música ao ganhar
+          await stopSound();
           Alert.alert('Parabéns', 'Você ganhou o jogo!');
         }
       }
@@ -155,11 +204,7 @@ const App = () => {
     setGameOver(false);
     setGameWon(false);
     setFlagMode(false);
-    await stopSound(); // Para o som ao reiniciar
-  };
-
-  const toggleFlagMode = () => {
-    setFlagMode(prev => !prev);
+    await stopSound();
   };
 
   const renderSquare = (row, col) => {
@@ -181,7 +226,7 @@ const App = () => {
         key={`${row}-${col}`}
         style={[
           styles.square,
-          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#B0E0E6') : '#4c0d6b' },
+          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#A9A9A9') : '#4c0d6b' },
         ]}
         onPress={() => handleSquarePress(row, col)}
       >
@@ -191,32 +236,30 @@ const App = () => {
   };
 
   return (
-    <ImageBackground 
-      source={require('../images/galaxy.jpg')} // Coloque o caminho para sua imagem
+    <LinearGradient 
+      colors={gradientOptions.colors}
+      locations={gradientOptions.locations}
+      start={gradientOptions.start}
+      end={gradientOptions.end}
       style={styles.background}
     >
       <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
-        <LinearGradient
-          colors={['rgba(1, 3, 5, 0.7)', 'rgba(14, 30, 43, 0.7)', 'rgba(18, 28, 105, 0.7)']}
-          style={styles.gradient}
-        >
-          <Text style={styles.textTitulo}> Campo minado </Text>
-          <TouchableOpacity onPress={toggleFlagMode} style={styles.flagButton}>
-            <Text style={styles.flagButtonText}>{flagMode ? 'Desativar Modo Bandeira' : 'Ativar Modo Bandeira'}</Text>
-          </TouchableOpacity>
-          <View style={styles.board}>
-            {board.map((row, rowIndex) => (
-              <View key={rowIndex} style={styles.row}>
-                {row.map((_, colIndex) => renderSquare(rowIndex, colIndex))}
-              </View>
-            ))}
-          </View>
-          <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
-            <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
-          </TouchableOpacity>
-        </LinearGradient>
+        <Text style={styles.title}>Campo Minado</Text>
+        <TouchableOpacity onPress={() => setFlagMode(!flagMode)} style={styles.flagButton}>
+          <Text style={styles.flagButtonText}>{flagMode ? 'Desativar Modo Bandeira' : 'Ativar Modo Bandeira'}</Text>
+        </TouchableOpacity>
+        <View style={styles.board}>
+          {board.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+              {row.map((_, colIndex) => renderSquare(rowIndex, colIndex))}
+            </View>
+          ))}
+        </View>
+        <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
+          <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+        </TouchableOpacity>
       </Animated.View>
-    </ImageBackground>
+    </LinearGradient>
   );
 };
 
@@ -304,5 +347,4 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,     // Raio da sombra
   },
 });
-
 export default App;

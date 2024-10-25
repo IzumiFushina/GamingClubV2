@@ -136,11 +136,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
     marginBottom: 20,
-    color: '#DB73B7',
-  },
+    color: "#BA52AD",
+    fontFamily: 'Font3',
+},
   stats: {
     fontSize: 18,
     marginBottom: 20,

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, Modal, } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, Modal, Image } from 'react-native';
 import * as Progress from 'react-native-progress'; // Importa a biblioteca de progresso
+import { BlurView } from 'expo-blur';
 
 export default function App() {
   const niveis = [
@@ -172,70 +173,71 @@ export default function App() {
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.container}>
-        <View style={styles.banner}>
-          <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
-        </View>
-
-        <Progress.Bar
-          progress={progresso}
-          width={300}
-          color="#903799"
-          style={styles.progressBar}
-        />
-
-        <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>
-            {niveis[nivelAtual].perguntas[indiceAtual].pergunta}
-          </Text>
-        </View>
-
-        <View style={styles.answersContainer}>
-          {niveis[nivelAtual].perguntas[indiceAtual].respostas.map((resposta, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.answerButton,
-                respostaSelecionada === resposta && {
-                  backgroundColor: resposta === niveis[nivelAtual].perguntas[indiceAtual].respostaCorreta ? '#4CAF50' : '#F44336',
-                },
-              ]}
-              onPress={() => handleAnswer(resposta)}
-              disabled={respostaSelecionada !== null}
-            >
-              <Text style={styles.answerText}>{resposta}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {respostaSelecionada && (
-          <TouchableOpacity style={styles.nextButton} onPress={proximaPergunta}>
-            <Text style={styles.nextButtonText}>Próxima Pergunta</Text>
-          </TouchableOpacity>
-        )}
-
-        {/* Modal para exibir a medalha e pontuação */}
-        <Modal
-          visible={modalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={resetGame}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Image
-                source={require("../images/medalha.png")} // Caminho da imagem da medalha
-                style={styles.medalImage}
-              />
-              <Text style={styles.modalText}>Parabéns!</Text>
-              <Text style={styles.modalScore}>Você acertou {pontuacao} perguntas!</Text>
-              <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
-                <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
-              </TouchableOpacity>
-            </View>
+      <BlurView intensity={10} style={styles.blurContainer}>
+        <View style={styles.container}>
+          <View style={styles.banner}>
+            <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
           </View>
-        </Modal>
-      </View>
+
+          <Progress.Bar
+            progress={progresso}
+            width={300}
+            color="#903799"
+            style={styles.progressBar}
+          />
+
+          <View style={styles.questionContainer}>
+            <Text style={styles.questionText}>
+              {niveis[nivelAtual].perguntas[indiceAtual].pergunta}
+            </Text>
+          </View>
+
+          <View style={styles.answersContainer}>
+            {niveis[nivelAtual].perguntas[indiceAtual].respostas.map((resposta, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.answerButton,
+                  respostaSelecionada === resposta && {
+                    backgroundColor: resposta === niveis[nivelAtual].perguntas[indiceAtual].respostaCorreta ? '#4CAF50' : '#F44336',
+                  },
+                ]}
+                onPress={() => handleAnswer(resposta)}
+                disabled={respostaSelecionada !== null}
+              >
+                <Text style={styles.answerText}>{resposta}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {respostaSelecionada && (
+            <TouchableOpacity style={styles.nextButton} onPress={proximaPergunta}>
+              <Text style={styles.nextButtonText}>Próxima Pergunta</Text>
+            </TouchableOpacity>
+          )}
+
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={resetGame}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Image
+                  source={require("../images/medalha.png")}
+                  style={styles.medalImage}
+                />
+                <Text style={styles.modalText}>Parabéns!</Text>
+                <Text style={styles.modalScore}>Você acertou {pontuacao} perguntas!</Text>
+                <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+                  <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </BlurView>
     </ImageBackground>
   );
 }
@@ -246,11 +248,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  blurContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
     padding: 20,
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
   banner: {
     backgroundColor: '#903799',
@@ -274,11 +282,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
   },
   questionText: {
     fontSize: 28,
@@ -296,11 +299,6 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 4,
   },
   answerText: {
     fontSize: 18,
@@ -312,18 +310,12 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 20,
     borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 4,
   },
   nextButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  // Estilos para o modal
   modalContainer: {
     flex: 1,
     justifyContent: 'center',

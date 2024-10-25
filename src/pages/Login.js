@@ -43,7 +43,7 @@ export default function Login() {
     <View style={styles.container}>
       
       <ImageBackground 
-        source={require('../images/fundoagain.png')} 
+        source={require('../images/BackgroundQuebraCabeça.png')} 
         style={styles.background} 
       >
         <BlurView intensity={50} style={styles.viewCds}>

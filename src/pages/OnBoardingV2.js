@@ -101,12 +101,11 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Centraliza horizontalmente
   },
   title: {
-    color: "white",
-    fontSize: 35,
-    fontFamily: "Font4",
-    margin: 15,
+    fontSize: 20,
+    marginBottom: 20,
     color: "#d99bdd",
-  },
+    fontFamily: 'Font3',
+},
   button: {
     alignItems: 'center',
     justifyContent: 'center',

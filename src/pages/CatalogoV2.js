@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { Dimensions, Image, View, Text, StyleSheet, ScrollView } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import Carousel from 'react-native-reanimated-carousel';
+import TopFooter from '../components/RodapeDeCima';
 
 // Suas imagens
 const image1 = require('../images/anuncio1.png');
@@ -33,7 +34,7 @@ function CatalogoV2() {
         <View style={styles.container}>
             <ScrollView>
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>Seu rodapé na parte superior</Text>
+                    <TopFooter/>
                 </View>
 
                 <Text style={styles.title}>Bem-vindo ao GamingClub!!</Text>
@@ -68,6 +69,7 @@ function CatalogoV2() {
                     <View style={styles.page}><Text style={styles.pageText}>Jogo 1</Text></View>
                 </PagerView>
             </ScrollView>
+            <TopFooter/>
         </View>
     );
 }
@@ -75,8 +77,8 @@ function CatalogoV2() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 20,
         backgroundColor: '#14012b',
+        paddingTop: "7%",
     },
     header: {
         paddingVertical: 20,

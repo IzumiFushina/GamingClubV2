@@ -145,13 +145,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#BA52AD',
-    marginBottom: 30,
-    textAlign: 'center',
-    fontFamily: 'PressStart2P',
-  },
+    fontSize: 20,
+    marginBottom: 20,
+    color: "#4e5b6e",
+    fontFamily: 'Font3',
+},
   level: {
     fontSize: 24,
     color: '#4e5b6e',

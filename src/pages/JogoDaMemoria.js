@@ -96,6 +96,7 @@ const App = () => {
       source={require('../images/BackgroundQuebraCabeça.png')} // Imagem de fundo
       style={styles.background}
     >
+       <View style={styles.overlay} />
       <View style={styles.container}>
         <Text style={styles.title}>Jogo Da Memória</Text>
         <Text style={styles.timer}>Tempo: {time} segundos</Text>
@@ -136,6 +137,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
   overlay: {
     position: 'absolute',
@@ -151,12 +153,11 @@ const styles = StyleSheet.create({
     width: 390,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 25,
     marginBottom: 20,
-    marginTop: 25,
-    color: '#DB73B7',
-  },
+    color: "#d99bdd",
+    fontFamily: 'Font3',
+},
   timer: {
     fontSize: 18,
     color: 'white',

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 
 const TicTacToe = () => {
   const GG_ALL_GAME_CONFIG = {
@@ -64,19 +64,28 @@ const TicTacToe = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.status}>{status}</Text>
-      <View style={styles.board}>
-        {Array(9).fill(null).map((_, index) => renderCell(index))}
+    <ImageBackground 
+    source={require('../images/medalha.png')}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        <Text style={styles.status}>{status}</Text>
+        <View style={styles.board}>
+          {Array(9).fill(null).map((_, index) => renderCell(index))}
+        </View>
+        <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+          <Text style={styles.resetButtonText}>Reset Game</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
-        <Text style={styles.resetButtonText}>Reset Game</Text>
-      </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
