@@ -3,84 +3,84 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, ImageBackground, Modal
 
 const App = () => {
   const [board, setBoard] = useState([]);
-  const [emptyIndex, setEmptyIndex] = useState(15); // Inicialmente, a posição vazia é a última
-  const [moves, setMoves] = useState(0); // Contador de movimentos
-  const [time, setTime] = useState(0); // Contador de tempo
-  const [isPlaying, setIsPlaying] = useState(false); // Para controlar o temporizador
-  const [gameWon, setGameWon] = useState(false); // Para controlar a exibição do modal
+  const [emptyIndex, setEmptyIndex] = useState(15);
+  const [moves, setMoves] = useState(0);
+  const [time, setTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
 
   useEffect(() => {
-    initializeBoard(); // Inicializa o tabuleiro ao montar o componente
+    initializeBoard();
   }, []);
 
   useEffect(() => {
     let timer;
     if (isPlaying) {
       timer = setInterval(() => {
-        setTime(prevTime => prevTime + 1); // Atualiza o tempo
-      }, 1000); // Atualiza a cada segundo
+        setTime(prevTime => prevTime + 1);
+      }, 1000);
     }
-    return () => clearInterval(timer); // Limpa o timer ao desmontar
+    return () => clearInterval(timer);
   }, [isPlaying]);
 
   const initializeBoard = () => {
-    const newBoard = Array.from({ length: 16 }, (_, i) => (i < 15 ? i + 1 : '')); // Cria o tabuleiro
-    setBoard(newBoard); // Define o tabuleiro inicial
-    setEmptyIndex(15); // Define a posição vazia
-    setMoves(0); // Reseta o contador de movimentos
-    setTime(0); // Reseta o tempo
-    setIsPlaying(true); // Começa a contagem do tempo
-    setGameWon(false); // Reseta o status de vitória
+    const newBoard = Array.from({ length: 16 }, (_, i) => (i < 15 ? i + 1 : ''));
+    setBoard(newBoard);
+    setEmptyIndex(15);
+    setMoves(0);
+    setTime(0);
+    setIsPlaying(true);
+    setGameWon(false);
   };
 
   const shuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Troca elementos
+      [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   };
 
   const randomizeBoard = () => {
-    const newBoard = shuffle(Array.from({ length: 16 }, (_, i) => (i < 15 ? i + 1 : ''))); // Embaralha as peças
+    const newBoard = shuffle(Array.from({ length: 16 }, (_, i) => (i < 15 ? i + 1 : '')));
     setBoard(newBoard);
-    setEmptyIndex(newBoard.indexOf('')); // Atualiza a posição do vazio
-    setMoves(0); // Reseta o contador de movimentos
-    setTime(0); // Reseta o tempo
-    setIsPlaying(true); // Começa a contagem do tempo
+    setEmptyIndex(newBoard.indexOf(''));
+    setMoves(0);
+    setTime(0);
+    setIsPlaying(true);
   };
 
   const movePiece = (index) => {
     const adjacentIndexes = [
-      emptyIndex - 1, // esquerda
-      emptyIndex + 1, // direita
-      emptyIndex - 4, // acima
-      emptyIndex + 4, // abaixo
+      emptyIndex - 1,
+      emptyIndex + 1,
+      emptyIndex - 4,
+      emptyIndex + 4,
     ];
-    
+
     if (adjacentIndexes.includes(index)) {
       const newBoard = [...board];
       [newBoard[emptyIndex], newBoard[index]] = [newBoard[index], newBoard[emptyIndex]];
       setBoard(newBoard);
       setEmptyIndex(index);
-      setMoves(moves + 1); // Incrementa o contador de movimentos
-      checkWin(newBoard); // Verifica se ganhou
+      setMoves(moves + 1);
+      checkWin(newBoard);
     }
   };
 
   const checkWin = (newBoard) => {
     if (newBoard.every((value, index) => value === (index < 15 ? index + 1 : ''))) {
-      setIsPlaying(false); // Para a contagem do tempo
-      setGameWon(true); // Mostra o modal com a vitória
+      setIsPlaying(false);
+      setGameWon(true);
     }
   };
 
   return (
     <ImageBackground
-      source={require('../images/BackgroundQuebraCabeça.png')} // Usando require para a imagem local
+      source={require('../images/BackgroundQuebraCabeça.png')}
       style={styles.background}
     >
-      <View style={styles.container}>
+      <View style={styles.overlay}>
         <Text style={styles.title}>Quebra-Cabeça de 15</Text>
         <Text style={styles.stats}>Movimentos: {moves}</Text>
         <Text style={styles.stats}>Tempo: {time} segundos</Text>
@@ -89,7 +89,7 @@ const App = () => {
             <TouchableOpacity
               key={index}
               style={[styles.piece, value === '' && styles.empty]}
-              onPress={() => movePiece(index)} // Permite mover apenas peças adjacentes
+              onPress={() => movePiece(index)}
             >
               {value ? <Text style={styles.pieceText}>{value}</Text> : null}
             </TouchableOpacity>
@@ -99,16 +99,11 @@ const App = () => {
           <Text style={styles.buttonText}>Embaralhar</Text>
         </TouchableOpacity>
 
-        {/* Modal de vitória */}
-        <Modal
-          transparent={true}
-          visible={gameWon}
-          animationType="slide"
-        >
+        <Modal transparent={true} visible={gameWon} animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Image
-                source={require('../images/medalha.png')} // Adicione o caminho da imagem da medalha
+                source={require('../images/medalha.png')}
                 style={styles.medalImage}
               />
               <Text style={styles.congratulationsText}>Parabéns!</Text>
@@ -130,17 +125,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo escuro cobrindo toda a tela
+    width: '100%',
+    height: '100%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 35,
     marginBottom: 20,
     color: "#BA52AD",
-    fontFamily: 'Font3',
-},
+    fontFamily: 'Font5',
+  },
   stats: {
     fontSize: 18,
     marginBottom: 20,
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)', // Fundo escurecido
+    backgroundColor: 'rgba(0,0,0,0.7)',
   },
   modalContent: {
     width: 300,

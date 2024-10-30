@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Modal, ImageBackground, Image } from 'react-native';
+import { BlurView } from 'expo-blur';
+import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'; // Importando o ícone
 
-const App = () => {
+const App = ({ navigation }) => { // Recebendo navigation como prop
   const [guess, setGuess] = useState('');
   const [numberToGuess, setNumberToGuess] = useState(generateRandomNumber());
   const [attempts, setAttempts] = useState(0);
@@ -39,7 +41,7 @@ const App = () => {
   return (
     <ImageBackground source={require('../images/imagemfundo1.png')} style={styles.background}>
       <View style={styles.outerContainer}>
-        <View style={styles.container}>
+        <BlurView style={styles.container} intensity={50} tint="light">
           <Text style={styles.title}>Adivinhe o Número!</Text>
           <TextInput
             style={styles.input}
@@ -52,7 +54,12 @@ const App = () => {
           <TouchableOpacity style={styles.button} onPress={handleGuess}>
             <Text style={styles.buttonText}>Adivinhar</Text>
           </TouchableOpacity>
-        </View>
+        </BlurView>
+
+        {/* Ícone de fechar para ir ao Catalogo */}
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
+          <SimpleLineIcons name="close" size={30} color="white" />
+        </TouchableOpacity>
 
         {/* Modal para Dica (maior ou menor) */}
         <Modal
@@ -65,10 +72,7 @@ const App = () => {
             <View style={styles.modalContent}>
               <Text style={styles.hintText}>{hintMessage}</Text>
               <Text style={styles.encouragement}>Continue tentando, não desista!</Text>
-              <TouchableOpacity
-                style={styles.okButton}
-                onPress={() => setHintModalVisible(false)}
-              >
+              <TouchableOpacity style={styles.okButton} onPress={() => setHintModalVisible(false)}>
                 <Text style={styles.okButtonText}>OK</Text>
               </TouchableOpacity>
             </View>
@@ -77,23 +81,17 @@ const App = () => {
 
         {/* Modal para Vitória (com imagem de medalha) */}
         <Modal visible={victoryModalVisible} transparent animationType="slide">
-   <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      {/* Imagem da medalha no topo */}
-      <Image source={require('../images/medalha.png')} style={styles.medalImage} />
-
-      {/* Textos abaixo da imagem */}
-      <Text style={styles.modalTitle}>Parabéns!</Text>
-      <Text style={styles.modalText}>Você acertou o número em {attempts} tentativas!</Text>
-
-      {/* Botão "Jogar Novamente" com estilo */}
-      <TouchableOpacity style={styles.playAgainButton} onPress={resetGame}>
-        <Text style={styles.playAgainButtonText}>Jogar Novamente</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
-
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Image source={require('../images/medalha.png')} style={styles.medalImage} />
+              <Text style={styles.modalTitle}>Parabéns!</Text>
+              <Text style={styles.modalText}>Você acertou o número em {attempts} tentativas!</Text>
+              <TouchableOpacity style={styles.playAgainButton} onPress={resetGame}>
+                <Text style={styles.playAgainButtonText}>Jogar Novamente</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     </ImageBackground>
   );
@@ -112,20 +110,17 @@ const styles = StyleSheet.create({
   container: {
     width: '85%',
     padding: 25,
-    backgroundColor: '#ffffff',
     borderRadius: 15,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   title: {
-    fontSize: 26,
+    fontSize: 27,
     fontWeight: 'bold',
-    color: '#4A4A4A',
+    color: '#6a1b9a',
     marginBottom: 30,
+    fontFamily: 'Font5',
   },
   input: {
     height: 45,
@@ -139,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    width: '100%',
+    width: '80%',
     paddingVertical: 12,
     backgroundColor: '#6a1b9a',
     borderRadius: 8,
@@ -150,10 +145,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  attempts: {
-    marginTop: 25,
-    fontSize: 18,
-    color: '#4A4A4A',
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
   },
   modalContainer: {
     flex: 1,
@@ -179,19 +175,6 @@ const styles = StyleSheet.create({
     color: '#555',
     textAlign: 'center',
     marginBottom: 20,
-  },
-  congratulationsText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  attemptsText: {
-    fontSize: 18,
-    color: '#4A4A4A',
-    marginBottom: 20,
-    textAlign: 'center',
   },
   medalImage: {
     width: 100,

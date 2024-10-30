@@ -23,6 +23,7 @@ import OnboardingV2 from "../pages/OnBoardingV2";
 import CatalogoV2 from "../pages/CatalogoV2";
 import TesteDeVide from "../pages/VídeoTest.Js";
 import TestComponent from "../pages/TestComponent";
+import JogodaForca from "../pages/Jogodaforca";
 
 const Drawer = createDrawerNavigator();
 

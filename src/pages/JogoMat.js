@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated, ImageBackground, Modal, Image } from 'react-native';
+import { BlurView } from 'expo-blur'; // Importando BlurView
 
 const generateEquation = (level) => {
   const num1 = Math.floor(Math.random() * 10 * level);
@@ -64,11 +65,11 @@ export default function JogoMat() {
 
   return (
     <ImageBackground 
-      source={require('../images/BackgroundQuebraCabeça.png')} 
+      source={require('../images/fundo2.png')} 
       style={styles.background}
     >
       <View style={styles.outerContainer}>
-        <View style={styles.container}>
+        <BlurView style={styles.container} blurType="light" blurAmount={10}>
           <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
             Jogo de Matemática
           </Animated.Text>
@@ -95,7 +96,7 @@ export default function JogoMat() {
           <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
             <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
           </TouchableOpacity>
-        </View>
+        </BlurView>
 
         {/* Modal de exibição da medalha */}
         <Modal
@@ -139,17 +140,19 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    backgroundColor: '#ffffff',
     borderRadius: 20,
     padding: 70,
     alignItems: 'center',
+    overflow: 'hidden', // necessário para efeito de blur arredondado
+    backgroundColor: 'rgba(0, 0, 0, 0)', // Fundo mais claro
   },
   title: {
     fontSize: 20,
     marginBottom: 20,
     color: "#4e5b6e",
-    fontFamily: 'Font3',
-},
+    fontFamily: 'Font5',
+    fontSize: "0",
+  },
   level: {
     fontSize: 24,
     color: '#4e5b6e',

@@ -1,58 +1,70 @@
 import * as React from 'react';
 import { Dimensions, Image, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import PagerView from 'react-native-pager-view';
 import Carousel from 'react-native-reanimated-carousel';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-// Importe suas imagens locais
 const image1 = require('../images/anuncio1.png');
 const image2 = require('../images/anuncio2.png');
 const image3 = require('../images/anuncio3.png');
-const gameImage1 = require('../images/Campo(2).png'); 
-const gameImage2 = require('../images/velha.png'); 
-const gameImage3 = require('../images/xadrez.png'); 
-const gameImage4 = require('../images/memoria (1).png'); 
-const gameImage5 = require('../images/xadrez.png'); 
-const gameImage6 = require('../images/xadrez.png'); 
-const gameImage7 = require('../images/xadrez.png'); 
+const gameImage1 = require('../images/minado.png'); 
+const gameImage2 = require('../images/velha2.png'); 
+const gameImage3 = require('../images/Xadrez.png'); 
+const gameImage4 = require('../images/Memoria.png'); 
+const gameImage5 = require('../images/oi.png'); 
+const gameImage6 = require('../images/quiz.png'); 
+const gameImage7 = require('../images/numeros.png'); 
+const backgroundImage = require('../images/fundo5.png'); // Imagem de fundo
 
 function Index({ navigation }) {
     const width = Dimensions.get('window').width;
 
-    // Utilize as imagens importadas
     const images = [image1, image2, image3];
-    const gameImages = [gameImage1, gameImage2, gameImage3]; // Array de imagens para os jogos
-
-    // Lista de jogos com suas rotas, IDs e imagens associadas
     const games = [
         { id: 1, name: 'Campo Minado', route: 'CampoMinado', image: gameImage1 },
         { id: 2, name: 'Jogo da Velha', route: 'JogodaVelha', image: gameImage2 },
         { id: 3, name: 'Xadrez', route: 'chess', image: gameImage3 },
         { id: 4, name: 'Jogo da Memória', route: 'JogoDaMemoria', image: gameImage4 },
-        { id: 5, name: 'Jogo das Palavras', route: 'JogoPalavras', image: gameImage5 },
+        { id: 5, name: 'Quebra-cabeça', route: 'JogoPalavras', image: gameImage5 },
         { id: 6, name: 'Quiz', route: 'Quiz', image: gameImage6 },
         { id: 7, name: 'Jogo de Matemática', route: 'JogoMat', image: gameImage7 },
-        // Adicione mais jogos e imagens aqui
     ];
 
-    // Função para navegar para o jogo específico
     const openGame = (route) => {
         navigation.navigate(route);
     };
 
-    return (
-        <View style={{ flex: 1, marginTop: 20, backgroundColor: '#14012b', }}>
-            <ScrollView>
+    const handleSquarePress = (id) => {
+        console.log(`Quadrado ${id} clicado!`);
+    };
 
-                <Text style={{ fontSize: 25, marginBottom: 20, color: "#b01782", }}>Bem vindo ao GamingClub!!</Text>
+    const goToSettings = () => {
+        navigation.navigate('Settings');
+    };
+
+    const goToChat = () => {
+        navigation.navigate('Chat');
+    };
+
+    const goToProfile = () => {
+        navigation.navigate('Profile');
+    };
+
+    return (
+        <View style={styles.container}>
+            <Image source={backgroundImage} style={styles.backgroundImage} />
+
+            <ScrollView style={styles.scrollContainer}>
+                <Text style={{ fontSize: 25, fontFamily: 'Font5', marginTop: "20%", marginBottom: 30, color: "#BA52AD" }}>
+                    Bem vindo ao GamingClub!!
+                </Text>
 
                 <Carousel
                     loop
-                    width={width * 1}
-                    height={width / 2.5}
+                    width={width}
+                    height={width / 3}
                     autoPlay={true}
                     data={images}
                     scrollAnimationDuration={2000}
-                    onSnapToItem={(index) => console.log('current index:', index)}
                     renderItem={({ index }) => (
                         <View style={styles.carouselItem}>
                             <Image
@@ -61,14 +73,14 @@ function Index({ navigation }) {
                             />
                         </View>
                     )}
+                    style={{ marginVertical: 20 }} 
                 />
 
-                <Text style={{ fontSize: 25, marginTop: 40, marginBottom: 20, color: "#b01782", }}>Todos os jogos</Text>
+                <Text style={{ fontSize: 20, fontFamily: 'Font5', marginTop: 15, marginBottom: 10, color: "#BA52AD" }}>Todos os jogos</Text>
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
-                    {/* Quadrados de jogos com imagens */}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
                     {games.map((game) => (
-                        <View key={game.id} style={{ alignItems: 'center' }}>
+                        <View key={game.id} style={styles.gameContainer}>
                             <TouchableOpacity
                                 style={styles.square}
                                 onPress={() => openGame(game.route)}
@@ -80,69 +92,119 @@ function Index({ navigation }) {
                     ))}
                 </ScrollView>
 
-                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15, color: "#b01782", }}>TESTE</Text>
-
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 5 }}>
-                    {/* Outros quadradinhos sem jogos associados */}
-                    {Array.from({ length: 6 }).map((_, index) => (
-                        <View key={index} style={styles.squareEmpty} />
+                <Text style={{ fontSize: 15, fontFamily: 'Font5', marginTop: 20, marginBottom: 15, color: "#BA52AD" }}>Popular Games</Text>
+                
+                <View style={styles.squareGrid}>
+                    {[...Array(4)].map((_, index) => (
+                        <View key={index} style={styles.squareContainer}>
+                            <TouchableOpacity
+                                style={styles.clickableSquare}
+                                onPress={() => handleSquarePress(index + 1)}
+                            >
+                                <Text style={styles.squareText}>{`Quadrado ${index + 1}`}</Text>
+                            </TouchableOpacity>
+                        </View>
                     ))}
-                </ScrollView>
-
-                <Text style={{ fontSize: 25, marginTop: 10, marginBottom: 15, color: "#b01782", }}>TESTE</Text>
-
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ marginTop: 5 }}>
-                    {/* Mais quadradinhos sem jogos associados */}
-                    {Array.from({ length: 6 }).map((_, index) => (
-                        <View key={index} style={styles.squareEmpty} />
-                    ))}
-                </ScrollView>
-
+                </View>
             </ScrollView>
+
+            <View style={styles.footer}>
+                <TouchableOpacity onPress={goToSettings}>
+                    <Icon name="settings" size={30} color="#E07BDA" style={styles.footerIcon} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={goToChat}>
+                    <Icon name="chatbubble-ellipses" size={30} color="#E07BDA" style={styles.footerIcon} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={goToProfile}>
+                    <Icon name="person" size={30} color="#E07BDA" style={styles.footerIcon} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    backgroundImage: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    scrollContainer: {
+        flex: 1,
+        zIndex: 1, // Para que o ScrollView fique sobre a imagem de fundo
+    },
     carouselItem: {
         flex: 1,
-        borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 30,
+        borderRadius: 15,
     },
     carouselImage: {
-        width: "100%",
-        borderRadius: 30,
-        height: Dimensions.get('window').width / 2.5,
+        width: '90%',
+        height: '100%',
+        borderRadius: 20,
         resizeMode: 'cover',
     },
     square: {
-        width: 120,
-        height: 120,
-        borderRadius: 30,
+        width: 90,
+        height: 90,
+        borderRadius: 15,
         overflow: 'hidden',
         marginHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
     squareImage: {
-        width: '100%',  
+        width: '100%',
         height: '100%',
         resizeMode: 'cover',
     },
     captionText: {
-        color: 'black',
-        fontSize: 14,
+        color: "#E07BDA",
+        fontSize: 12,
         fontWeight: 'bold',
+        fontFamily: 'Font5',
         textAlign: 'center',
         marginTop: 5,
     },
-    squareEmpty: {
-        width: 120,
-        height: 120,
-        borderRadius: 30,
-        backgroundColor: '#5c4f8a',
+    gameContainer: {
+        alignItems: 'center',
+    },
+    squareGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    squareContainer: {
+        width: '45%', // Ajuste para dois quadrados por linha
+        alignItems: 'center',
+        marginBottom: 15, // Espaço entre linhas
+    },
+    clickableSquare: {
+        width: '80%',
+        height: 190,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    squareText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    footer: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        backgroundColor: '#000',
+    },
+    footerIcon: {
         marginHorizontal: 10,
     },
 });

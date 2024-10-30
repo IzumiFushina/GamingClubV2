@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 1,     // Raio da sombra
   },
   textTitulo: {
-    fontFamily: 'Font1',
+    fontFamily: 'Font3',
     fontSize: 30,
     color: '#9f5bd4',
     marginBottom: 30,

@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Alert, Text, TextInput, TouchableOpacity, Animated, ImageBackground } from 'react-native';
-import { BlurView } from 'expo-blur'; // Importando BlurView
+import { View, StyleSheet, Alert, Text, TextInput, TouchableOpacity, Animated, Image, ImageBackground } from 'react-native';
+import { BlurView } from 'expo-blur';
 import * as ImagePicker from 'expo-image-picker';
-import { LinearGradient } from 'expo-linear-gradient'; 
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'; // Importando as funções corretas do Firebase
-import { auth } from '../config/firebaseConfig'; // Ajuste o caminho conforme necessário
+import { LinearGradient } from 'expo-linear-gradient';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
 
 export default function Cadastro() {
-  const [email, setEmail] = useState(''); // Estado para email
-  const [password, setPassword] = useState(''); // Estado para senha
-  const [username, setUsername] = useState(''); // Estado para username
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [avatar, setAvatar] = useState(null); // Estado para o avatar
   const translateY = useRef(new Animated.Value(50)).current;
 
   useEffect(() => {
     Animated.timing(translateY, {
-      toValue: 0, 
-      duration: 1000, 
+      toValue: 0,
+      duration: 1000,
       useNativeDriver: true,
     }).start();
 
@@ -27,15 +28,27 @@ export default function Cadastro() {
     })();
   }, []);
 
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setAvatar(result.assets[0].uri);
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Houve um problema ao tentar acessar a galeria.');
+    }
+  };
+
   const handleSignUp = async () => {
     try {
-      // Criar o usuário com email e senha
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Atualizar o perfil do usuário com o username
       await updateProfile(user, { displayName: username });
-
       Alert.alert('Sucesso', 'Conta criada com sucesso!');
     } catch (error) {
       console.error(error);
@@ -46,24 +59,29 @@ export default function Cadastro() {
   return (
     <View style={styles.container}>
       <ImageBackground 
-        source={require('../images/fundoagain.png')} 
+        source={require('../images/BackgroundQuebraCabeça.png')} 
         style={styles.background} 
       >
-        {/* BlurView criando o efeito de desfoque */}
         <BlurView intensity={50} style={styles.viewCds}>
           <TouchableOpacity style={styles.closeIcon} />
 
-          {/* Título "Cadastro" */}
           <Text style={styles.titleText}>Cadastro</Text>
 
           <Animated.View style={{ transform: [{ translateY }] }}>
+            <TouchableOpacity onPress={pickImage}>
+              <Image 
+                source={avatar ? { uri: avatar } : require('../images/AAAAA.png')}
+                style={styles.avatar} 
+              />
+            </TouchableOpacity>
+
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.InputName}
                 placeholder="Username"
                 placeholderTextColor="white"
                 value={username}
-                onChangeText={setUsername} // Atualiza o estado de username
+                onChangeText={setUsername}
               />
             </View>
 
@@ -73,10 +91,10 @@ export default function Cadastro() {
                 placeholder="E-mail"
                 placeholderTextColor="white"
                 value={email}
-                onChangeText={setEmail} // Atualiza o estado de email
+                onChangeText={setEmail}
               />
             </View>
-             
+
             <View style={[styles.inputContainer, { marginBottom: 30 }]}>
               <TextInput
                 style={styles.InputName}
@@ -84,12 +102,12 @@ export default function Cadastro() {
                 placeholderTextColor="white"
                 secureTextEntry={true}
                 value={password}
-                onChangeText={setPassword} // Atualiza o estado de password
+                onChangeText={setPassword}
               />
             </View>
 
             <LinearGradient
-              colors={['#2C2081', '#573299']} // Cores do gradiente
+              colors={['#573299', '#8547B0']}
               style={styles.BtnCadastro}
             >
               <TouchableOpacity onPress={handleSignUp}>
@@ -106,12 +124,9 @@ export default function Cadastro() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
     backgroundColor: 'white',
-    padding: 0,
-    margin: 0,
-    alignItems: 'center', // Centraliza o conteúdo horizontalmente
-    justifyContent: 'center', // Centraliza o conteúdo verticalmente
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeIcon: {
     position: 'absolute',
@@ -125,27 +140,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    alignSelf: 'center',
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: 'white',
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomColor: 'white', // Borda branca nos inputs
-    marginBottom: 15, // Reduzindo a margem inferior para os inputs
+    borderBottomColor: 'white',
+    marginBottom: 15,
   },
   InputName: {
     width: 290,
     height: 40,
-    color: 'white', // Texto branco nos inputs
+    color: 'white',
     paddingHorizontal: 5,
-    borderWidth: 0.5, // Borda branca nos inputs
+    borderWidth: 0.5,
     borderColor: 'white',
     borderRadius: 5,
   },
   InputMail: {
     width: 290,
     height: 40,
-    color: 'white', // Texto branco nos inputs
+    color: 'white',
     paddingHorizontal: 5,
-    borderWidth: 0.5, // Borda branca nos inputs
+    borderWidth: 0.5,
     borderColor: 'white',
     borderRadius: 5,
   },
@@ -153,49 +177,43 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    height: 45,
-    width: 300,
-    marginTop: 20,
+    height: 40,
+    width: 150,
+    marginTop: 15,
     borderRadius: 8,
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3, // Aumentando a sombra
-    shadowRadius: 5, // Aumentando o raio da sombra
-    elevation: 8, // Aumentando a elevação
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   cdsButtonText: {
-    color: 'white', // Texto branco no botão
+    color: 'white',
     fontSize: 15,
     fontWeight: 'bold',
   },
   viewCds: {
-    height: '80%', // Aumentado o tamanho do card
-    width: '80%', // Aumentando a largura do card
-    backgroundColor: 'rgba(255, 255, 255, 0.1)', // Efeito de transparência no card
+    height: '80%',
+    width: '80%',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 0.5, // Borda branca mais fina
-    borderColor: 'white', // Borda branca no card
+    borderWidth: 0.5,
+    borderColor: 'white',
     borderRadius: 45,
     overflow: 'hidden',
-    shadowColor: "#000", // Sombra para profundidade
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3, // Sombra mais visível
-    shadowRadius: 5, // Aumentando o raio da sombra
-    elevation: 8, // Elevação para dar profundidade
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
   },
   titleText: {
-    color: 'white', // Cor do texto branco
-    fontSize: 24, // Tamanho da fonte do título
-    fontWeight: 'bold', // Negrito para o título
-    alignSelf: 'flex-start', // Alinha o texto à esquerda
-    marginLeft: 20, // Margem para distanciar da borda esquerda
-    marginBottom: 20, // Margem superior para distanciar do topo
+    color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+    alignSelf: 'flex-start',
+    marginLeft: 20,
+    marginBottom: 20,
   },
 });

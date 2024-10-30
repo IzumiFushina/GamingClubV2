@@ -1,89 +1,111 @@
-
-
-import React, { useState } from 'react';
-import { View, Text, Image, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient'; 
-import AntDesign from '@expo/vector-icons/AntDesign';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
-const slides = [
-  { image: require('../images/avatar.png'), text: 'Bem-vindo ao Gaming Club!!' },
-  { image: require('../images/Gaming Club.png'), text: 'Bem vindo ao Gaming Club!' },
-  { image: require('../images/galaxy.jpg'), text: 'Comece sua jornada agora!' },
-];
-
 const OnboardingScreen = () => {
-  const translateX = useSharedValue(0);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const navigation = useNavigation();
+  const [slideIndex, setSlideIndex] = useState(0);
+  const imageOpacity = useSharedValue(0);
+  const imageScale = useSharedValue(0); // Inicia com escala zero
+  const duration = 800; // Duração da animação
+  const buttonWidth = useSharedValue(60); // Largura inicial do botão
+  const buttonHeight = useSharedValue(60); // Altura inicial do botão
+  const buttonBorderRadius = useSharedValue(30); // Raio inicial do botão
 
-  const handleNext = () => {
-    if (currentSlide < slides.length - 1) {
-      const newSlide = currentSlide + 1;
-      setCurrentSlide(newSlide);
-      translateX.value = withTiming(-newSlide * width, { duration: 500 });
-    }
-  };
+  const slides = [
+    { id: '1', text: 'Bem-vindo ao nosso aplicativo!' },
+    { id: '2', text: 'Aqui você encontrará várias funcionalidades incríveis.' },
+    { id: '3', text: 'Vamos começar?' }
+  ];
 
-  const handlePrevious = () => {
-    if (currentSlide > 0) {
-      const newSlide = currentSlide - 1;
-      setCurrentSlide(newSlide);
-      translateX.value = withTiming(-newSlide * width, { duration: 500 });
-    }
-  };
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
+  const imageStyle = useAnimatedStyle(() => ({
+    opacity: imageOpacity.value,
+    transform: [
+      { scale: imageScale.value },
+    ],
   }));
 
-  const handleStart = () => {
-    navigation.navigate('Catalogo');
+  const buttonStyle = useAnimatedStyle(() => ({
+    width: buttonWidth.value,
+    height: buttonHeight.value,
+    borderRadius: buttonBorderRadius.value,
+  }));
+
+  const nextSlide = () => {
+    if (slideIndex < slides.length - 1) {
+      setSlideIndex(slideIndex + 1);
+      resetAnimation();
+    } else {
+      // Aqui você pode adicionar a navegação para a tela principal
+      console.log('Iniciar aplicativo');
+    }
   };
 
-  return (
-    <LinearGradient
-      colors={['#573299', '#121c69',]}
-      style={styles.container}
-    >
-     <Animated.View style={[styles.slidesContainer, animatedStyle]}>
-  {slides.map((slide, index) => (
-    <View key={index} style={styles.slide}>
-      <Image source={slide.image} style={styles.image} />
-      <Text style={styles.text}>{slide.text}</Text>
-      {index === 1 && ( 
-        <Text style={styles.welcomeText}>Descubra novos jogos do nosso app!</Text> 
-      )}
-    </View>
-  ))}
-</Animated.View>
+  const resetAnimation = () => {
+    imageOpacity.value = 0;
+    imageScale.value = 0; // Reseta a escala
+    buttonWidth.value = 60; // Reseta a largura
+    buttonHeight.value = 60; // Reseta a altura
+    buttonBorderRadius.value = 30; // Reseta o raio
 
-      <View style={styles.bottomContainer}>
-        {currentSlide === slides.length - 1 ? (
-          <TouchableOpacity onPress={handleStart} style={styles.startButton}>
-            <LinearGradient 
-              colors={['#000000', '#78145a']}
-              style={styles.gradientButton}
-            >
-              <FontAwesome5 name="door-open" size={20} color="white" />
-            </LinearGradient>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={handleNext} style={styles.navButtonRight}>
-            <AntDesign name="caretright" size={30} color="black" />
-          </TouchableOpacity>
-        )}
-                {currentSlide > 0 && (
-          <TouchableOpacity onPress={handlePrevious} style={styles.navButton}>
-            <AntDesign name="caretleft" size={30} color="black" />
-          </TouchableOpacity>
-        )}
+    imageOpacity.value = withTiming(1, { duration }); // Aumenta a opacidade
+    imageScale.value = withTiming(1, { duration }); // Aumenta a escala para 1
+
+    // Transição do botão
+    buttonWidth.value = withTiming(slideIndex === slides.length - 1 ? 100 : 60, { duration });
+    buttonHeight.value = withTiming(slideIndex === slides.length - 1 ? 50 : 60, { duration }); // Aumentando a altura
+    buttonBorderRadius.value = withTiming(slideIndex === slides.length - 1 ? 25 : 30, { duration });
+  };
+
+  useEffect(() => {
+    resetAnimation();
+  }, [slideIndex]);
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Animated.View style={[styles.imageContainer, imageStyle]}>
+          <ImageBackground 
+            source={require('../images/fundo5.png')} 
+            style={styles.background}
+            resizeMode="cover"
+          >
+            <Text style={styles.slideText}>{slides[slideIndex].text}</Text>
+          </ImageBackground>
+        </Animated.View>
+
+        <TouchableOpacity
+          onPress={nextSlide}
+          style={styles.buttonContainer}
+        >
+          <Animated.View style={[styles.button, buttonStyle]}>
+            {slideIndex === slides.length - 1 ? (
+              <Text style={styles.buttonText}>Entrar</Text>
+            ) : (
+              <MaterialIcons name="arrow-forward" size={30} color="#333" />
+            )}
+          </Animated.View>
+        </TouchableOpacity>
+
+        <View style={styles.indicatorContainer}>
+          {slides.map((_, index) => (
+            <Animated.View
+              key={index}
+              style={[
+                styles.indicator,
+                { 
+                  backgroundColor: index === slideIndex ? '#fff' : '#bbb', 
+                  transform: index === slideIndex ? [{ scaleX: 1.5 }] : [{ scaleX: 1 }]
+                }
+              ]}
+            />
+          ))}
+        </View>
       </View>
-    </LinearGradient>
+    </GestureHandlerRootView>
   );
 };
 
@@ -92,73 +114,64 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{rotateX: '0deg'}, {rotateZ: '0deg'}],
   },
-  slidesContainer: {
-    flexDirection: 'row',
-    width: width * slides.length,
-    height,
+  imageContainer: {
+    width: '100%',
+    height: '100%', // Cobrir a tela inteira
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  background: {
     flex: 1,
-  },
-  slide: {
-    width,
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1,
+
   },
-  image: {
-    width: '80%',
-    height: '50%',
-    resizeMode: 'contain',
-  },
-  text: {
-    fontSize: 20,
-    marginTop: 20,
+  slideText: {
+    fontSize: 24,
+    color: '#fff',
     textAlign: 'center',
-    color: '#ffffff',
-  },
-  bottomContainer: {
+    padding: 20,
     position: 'absolute',
     bottom: 20,
-    flexDirection: 'row-reverse',
-    alignItems: 'right',
-    width: '80%',
-    justifyContent: 'space-between',
   },
-  navButton: {
-    backgroundColor: '#78145a',
-    padding: 10,
-    borderRadius: 360,
-    width: 50,
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 50,
+    right: 20,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  navButtonRight: {
-    backgroundColor: '#78145a',
-    padding: 10,
-    borderRadius: 360,
-    width: 50,
+  button: {
+    backgroundColor: '#fff',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
-
-  startButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 50,
+  buttonText: {
+    fontSize: 18,
+    color: '#333',
+    fontWeight: 'bold',
   },
-  gradientButton: {
-    borderRadius: 90,
-    paddingVertical: 15,
-    paddingHorizontal: 15,
+  indicatorContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    flexDirection: 'row',
   },
-    welcomeText: {
-      fontSize: 18,
-      color: '#fff',
-      marginTop: 10,
-      textAlign: 'center',
-    },
-    // ... seus outros estilos  
+  indicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    transition: 'transform 0.2s ease', // Adiciona animação de transição
+  },
 });
 
 export default OnboardingScreen;

@@ -169,12 +169,14 @@ export default function App() {
 
   return (
     <ImageBackground
-      source={require('../images/BackgroundQuebraCabeça.png')}
+      source={require('../images/fundo1.png')}
       style={styles.background}
       resizeMode="cover"
     >
       <BlurView intensity={10} style={styles.blurContainer}>
         <View style={styles.container}>
+        <Text style={styles.title}>Quiz</Text>
+        <Text style={styles.subtitle}>Responda se souber!</Text>
           <View style={styles.banner}>
             <Text style={styles.bannerText}>Nível {nivelAtual + 1}</Text>
           </View>
@@ -254,6 +256,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fundo escuro cobrindo toda a tela
+  },
+  title: {
+    fontSize: 40,
+    marginBottom: 20,
+    color: "#d99bdd",
+    fontFamily: 'Font5',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 20,
+    marginBottom: 20,
+    color: "#d99bdd",
+    fontFamily: 'Font5',
+    textAlign: 'center',
   },
   container: {
     justifyContent: 'center',

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Modal, Animated } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons'; // Importar o ícone
 
 const generateCards = () => {
   const cards = ['😴', '🤯', '😱', '🤭', '😢', '🫨', '😡', '🥰', '🤩', '😂', '🤢', '😝'];
@@ -7,7 +8,7 @@ const generateCards = () => {
   return duplicatedCards.sort(() => 0.5 - Math.random());
 };
 
-const App = () => {
+const App = ({ navigation }) => { // Adicione navigation como props
   const [cards, setCards] = useState(generateCards());
   const [selectedCards, setSelectedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
@@ -49,7 +50,6 @@ const App = () => {
   };
 
   const shuffleCards = () => {
-    // Animação de rotação para simular o embaralhamento das cartas
     Animated.timing(rotation, {
       toValue: 1,
       duration: 1000,
@@ -93,10 +93,16 @@ const App = () => {
 
   return (
     <ImageBackground
-      source={require('../images/BackgroundQuebraCabeça.png')} // Imagem de fundo
+      source={require('../images/fundo5.png')} // Imagem de fundo
       style={styles.background}
     >
-       <View style={styles.overlay} />
+      <View style={styles.overlay} />
+      
+      {/* Ícone de fechar */}
+      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
+        <Icon name="close" size={30} color="#BA52AD" />
+      </TouchableOpacity>
+      
       <View style={styles.container}>
         <Text style={styles.title}>Jogo Da Memória</Text>
         <Text style={styles.timer}>Tempo: {time} segundos</Text>
@@ -147,17 +153,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajuste a opacidade conforme necessário
   },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+  },
   board: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: 390,
   },
   title: {
-    fontSize: 25,
-    marginBottom: 20,
+    fontSize: 40,
+    marginBottom: 10,
+    marginTop: 15,
     color: "#d99bdd",
-    fontFamily: 'Font3',
-},
+    fontFamily: 'Font5',
+  },
   timer: {
     fontSize: 18,
     color: 'white',

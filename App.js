@@ -11,6 +11,7 @@ export default function App() {
     Font2: require("./src/assets/Fonts/AlfaSlabOne-Regular.ttf"),
     Font3: require("./src/assets/Fonts/PressStart2P-Regular.ttf"),
     Font4: require("./src/assets/Fonts/GlacialIndifference-Regular.otf"),
+    Font5: require("./src/assets/Fonts/LuckiestGuy-Regular.ttf"),
   });
 
   if (!fontsLoaded) {

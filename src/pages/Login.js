@@ -74,7 +74,7 @@ export default function Login() {
               />
             </View>
 
-            <LinearGradient colors={['#2C2081', '#573299']} style={styles.BtnCadastro}>
+            <LinearGradient colors={['#2C2081', '#8547B0']} style={styles.BtnCadastro}>
               <TouchableOpacity onPress={signIn}>
                 <Text style={styles.cdsButtonText}>Login</Text>
               </TouchableOpacity>
