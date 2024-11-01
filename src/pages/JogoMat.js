@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Animated, ImageBackground, Modal, Image } from 'react-native';
 import { BlurView } from 'expo-blur'; // Importando BlurView
+import Icon from 'react-native-vector-icons/Ionicons'; // Importando ícones
+import { useNavigation } from '@react-navigation/native'; // Importando useNavigation
 
 const generateEquation = (level) => {
   const num1 = Math.floor(Math.random() * 10 * level);
@@ -29,6 +31,7 @@ const generateEquation = (level) => {
 };
 
 export default function JogoMat() {
+  const navigation = useNavigation(); // Obtendo a função de navegação
   const [level, setLevel] = useState(1); 
   const [equation, setEquation] = useState(generateEquation(level));
   const [userAnswer, setUserAnswer] = useState(''); 
@@ -65,7 +68,7 @@ export default function JogoMat() {
 
   return (
     <ImageBackground 
-      source={require('../images/fundo2.png')} 
+      source={require('../images/fundo4.png')} 
       style={styles.background}
     >
       <View style={styles.outerContainer}>
@@ -97,6 +100,10 @@ export default function JogoMat() {
             <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
           </TouchableOpacity>
         </BlurView>
+        
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
+          <Icon name="close" size={30} color="#6a1b9a" />
+        </TouchableOpacity>
 
         {/* Modal de exibição da medalha */}
         <Modal
@@ -144,31 +151,31 @@ const styles = StyleSheet.create({
     padding: 70,
     alignItems: 'center',
     overflow: 'hidden', // necessário para efeito de blur arredondado
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Fundo mais claro
+    backgroundColor: 'white',
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     marginBottom: 20,
-    color: "#4e5b6e",
+    color: "#BA52AD",
     fontFamily: 'Font5',
-    fontSize: "0",
+    textAlign: 'center',
   },
   level: {
     fontSize: 24,
-    color: '#4e5b6e',
+    color: '#c5c3c5',
     marginBottom: 20,
   },
   equation: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#4e5b6e',
+    color: '#933a88',
     marginBottom: 20,
     transform: [{ scale: 1.1 }],
-    fontFamily: 'Font2',
+    fontFamily: 'Font4',
   },
   input: {
     height: 50,
-    borderColor: '#4b0d66',
+    borderColor: '#c5c3c5',
     borderWidth: 2,
     width: 200,
     marginBottom: 20,
@@ -177,10 +184,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9fbfc',
     color: '#4e5b6e',
     borderRadius: 10,
-    fontFamily: 'PressStart2P',
+    fontFamily: 'Font4',
   },
   button: {
-    backgroundColor: '#4b0d66',
+    backgroundColor: '#df62b0',
     padding: 15,
     borderRadius: 10,
     marginBottom: 20,
@@ -195,12 +202,12 @@ const styles = StyleSheet.create({
   },
   score: {
     fontSize: 24,
-    color: '#df62b0',
+    color: '#c5c3c5',
     marginBottom: 20,
     fontFamily: 'PressStart2P',
   },
   resetButton: {
-    backgroundColor: '#cb44c7',
+    backgroundColor: '#BA52AD',
     padding: 15,
     borderRadius: 10,
   },
@@ -233,6 +240,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#4e5b6e',
     marginBottom: 20,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
   },
   modalScore: {
     fontSize: 18,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Animated, ImageBackground } from 'react-native';
 import { Audio } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/Ionicons'; // Importando ícones
 
 const BOARD_SIZE = 8;
 const MINES_COUNT = 10;
@@ -13,20 +14,24 @@ const GRADIENT_LOCATIONS = [0, 0.2, 0.4, 0.6, 0.8, 1, 1];
 const MOVEMENT = GRADIENT_LOCATIONS[1] / 20;
 const INTERVAL = 30;
 
-let timeout = undefined;
+let timeout;
 
 const generateBoard = () => {
-  const board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill({
-    isRevealed: false, isMine: false, neighboringMines: 0, isFlagged: false
-  }));
+  const board = Array.from({ length: BOARD_SIZE }, () => 
+    Array.from({ length: BOARD_SIZE }, () => ({
+      isRevealed: false,
+      isMine: false,
+      neighboringMines: 0,
+      isFlagged: false,
+    }))
+  );
 
   let minesPlanted = 0;
   while (minesPlanted < MINES_COUNT) {
     const row = Math.floor(Math.random() * BOARD_SIZE);
     const col = Math.floor(Math.random() * BOARD_SIZE);
-
     if (!board[row][col].isMine) {
-      board[row][col] = { ...board[row][col], isMine: true };
+      board[row][col].isMine = true;
       minesPlanted++;
     }
   }
@@ -34,8 +39,7 @@ const generateBoard = () => {
   for (let row = 0; row < BOARD_SIZE; row++) {
     for (let col = 0; col < BOARD_SIZE; col++) {
       if (!board[row][col].isMine) {
-        const neighboringMines = countNeighboringMines(board, row, col);
-        board[row][col] = { ...board[row][col], neighboringMines };
+        board[row][col].neighboringMines = countNeighboringMines(board, row, col);
       }
     }
   }
@@ -44,24 +48,20 @@ const generateBoard = () => {
 };
 
 const countNeighboringMines = (board, row, col) => {
-  let count = 0;
   const directions = [
     [-1, -1], [-1, 0], [-1, 1],
     [0, -1],           [0, 1],
     [1, -1], [1, 0], [1, 1],
   ];
 
-  directions.forEach(([dx, dy]) => {
+  return directions.reduce((count, [dx, dy]) => {
     const newRow = row + dx;
     const newCol = col + dy;
     if (newRow >= 0 && newRow < BOARD_SIZE && newCol >= 0 && newCol < BOARD_SIZE) {
-      if (board[newRow][newCol].isMine) {
-        count++;
-      }
+      return count + (board[newRow][newCol].isMine ? 1 : 0);
     }
-  });
-
-  return count;
+    return count;
+  }, 0);
 };
 
 const App = () => {
@@ -76,10 +76,8 @@ const App = () => {
     colors: GRADIENT_COLORS,
     locations: GRADIENT_LOCATIONS,
     start: START_DEFAULT,
-    end: END_DEFAULT
+    end: END_DEFAULT,
   });
-  const gradientOptionsRef = useRef(gradientOptions);
-  gradientOptionsRef.current = gradientOptions;
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -93,30 +91,15 @@ const App = () => {
   }, []);
 
   const infiniteRainbow = () => {
-    if (gradientOptionsRef.current.locations[1] - MOVEMENT <= 0) {
-      let gradientColors = [...gradientOptionsRef.current.colors];
-      gradientColors.shift();
-      gradientColors.push(gradientColors[1]);
+    const updatedLocations = gradientOptions.locations.map((loc, index) => 
+      index === gradientOptions.locations.length - 1 ? 1 : Math.max(0, loc - MOVEMENT).toFixed(2)
+    );
 
-      setGradientOptions({
-        colors: gradientColors,
-        locations: GRADIENT_LOCATIONS,
-        start: START_DEFAULT,
-        end: END_DEFAULT
-      });
-    } else {
-      const updatedLocations = gradientOptionsRef.current.locations.map((item, index) => {
-        if (index === gradientOptionsRef.current.locations.length - 1) return 1;
-        return parseFloat(Math.max(0, item - MOVEMENT).toFixed(2));
-      });
-
-      setGradientOptions({
-        colors: [...gradientOptionsRef.current.colors],
-        locations: updatedLocations,
-        start: START_DEFAULT,
-        end: END_DEFAULT
-      });
-    }
+    setGradientOptions(prev => ({
+      ...prev,
+      locations: updatedLocations,
+    }));
+    
     timeout = setTimeout(infiniteRainbow, INTERVAL);
   };
 
@@ -144,9 +127,7 @@ const App = () => {
 
     if (gameOver || gameWon || square.isRevealed) return;
 
-    if (!gameOver && !gameWon) {
-      await playSound();
-    }
+    if (!gameOver && !gameWon) await playSound();
 
     if (flagMode) {
       square.isFlagged = !square.isFlagged;
@@ -214,11 +195,7 @@ const App = () => {
     if (square.isFlagged) {
       content = '🚩';
     } else if (square.isRevealed) {
-      if (square.isMine) {
-        content = '💣';
-      } else if (square.neighboringMines > 0) {
-        content = square.neighboringMines.toString();
-      }
+      content = square.isMine ? '💣' : (square.neighboringMines > 0 ? square.neighboringMines.toString() : '');
     }
 
     return (
@@ -226,28 +203,23 @@ const App = () => {
         key={`${row}-${col}`}
         style={[
           styles.square,
-          { backgroundColor: square.isRevealed ? (square.isMine ? '#f4a261' : '#A9A9A9') : '#4c0d6b' },
+          { backgroundColor: square.isRevealed ? (square.isMine ? '#ff6b6b' : '#A9A9A9') : '#4c0d6b' },
         ]}
         onPress={() => handleSquarePress(row, col)}
       >
         <Text style={styles.squareText}>{content}</Text>
       </TouchableOpacity>
+      
     );
   };
 
   return (
-    <LinearGradient 
-      colors={gradientOptions.colors}
-      locations={gradientOptions.locations}
-      start={gradientOptions.start}
-      end={gradientOptions.end}
+    <ImageBackground 
+      source={require('../images/fundo5.png')} // Certifique-se de que o caminho da imagem está correto
       style={styles.background}
     >
-      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
+      <Animated.View style={styles.container}>
         <Text style={styles.title}>Campo Minado</Text>
-        <TouchableOpacity onPress={() => setFlagMode(!flagMode)} style={styles.flagButton}>
-          <Text style={styles.flagButtonText}>{flagMode ? 'Desativar Modo Bandeira' : 'Ativar Modo Bandeira'}</Text>
-        </TouchableOpacity>
         <View style={styles.board}>
           {board.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
@@ -255,28 +227,40 @@ const App = () => {
             </View>
           ))}
         </View>
-        <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
-          <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={() => setFlagMode(!flagMode)} style={styles.flagButton}>
+            <Text style={styles.flagButtonText}>{flagMode ? 'Desativar Modo Bandeira' : 'Ativar Modo Bandeira'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
+            <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
-    </LinearGradient>
+    </ImageBackground>
+    
+    
   );
 };
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-  },
-  gradient: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   board: {
     flexDirection: 'column',
-    borderWidth: 8,
-    borderColor: '#144263',
+    borderWidth: 4,
+    borderColor: '#BA52AD',
     borderRadius: 10,
+    overflow: 'hidden',
+    marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
@@ -286,65 +270,51 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: '#121c69',
-    borderRadius: 5,
-    margin: 2,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#BA52AD',
+    textAlign: 'center',
+    marginVertical: 20,
+    fontFamily: 'Font5',
   },
   squareText: {
-    fontSize: 18,
-    fontFamily: 'Courier',
-    color: 'black',
+    fontSize: 20,
+    color: '#fff',
   },
   resetButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#9f5bd4',
-    borderRadius: 8,
-    borderWidth: 1, 
-    borderColor: 'black', 
+    backgroundColor: '#1a2a5c',
+    padding: 8,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
   },
   resetButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-    textShadowColor: 'black', // Cor da sombra (borda)
-    textShadowOffset: {      // Deslocamento da sombra
-      width: 1,
-      height: 1,
-    },
-    textShadowRadius: 1,     // Raio da sombra
-  },
-  textTitulo: {
-    fontFamily: 'Font3',
-    fontSize: 30,
-    color: '#9f5bd4',
-    marginBottom: 30,
-    textAlign: 'center',
-    textShadowColor: 'pink', // Cor da sombra (borda)
-    textShadowOffset: {      // Deslocamento da sombra
-      width: 1,
-      height: 1,
-    },
-    textShadowRadius: 1,     // Raio da sombra
+    fontSize: 14,
   },
   flagButton: {
-    padding: 10,
-    backgroundColor: '#9f5bd4',
-    borderRadius: 8,
-    marginBottom: 20,
-    borderWidth: 1, 
-    borderColor: 'black', 
+    backgroundColor: '#4c0d6b',
+    padding: 8,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginHorizontal: 5,
+    width: 180,
+    height: 50,
   },
   flagButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
-    textShadowColor: 'black', // Cor da sombra (borda)
-    textShadowOffset: {      // Deslocamento da sombra
-      width: 1,
-      height: 1,
-    },
-    textShadowRadius: 1,     // Raio da sombra
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
   },
 });
+
 export default App;

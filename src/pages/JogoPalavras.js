@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert, Modal, ImageBackground, Image } from 'react-native';
 import { BlurView } from 'expo-blur';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons'; // Importando o ícone
+import Icon from 'react-native-vector-icons/Ionicons'; // Importando ícones
+
+
 
 const App = ({ navigation }) => { // Recebendo navigation como prop
   const [guess, setGuess] = useState('');
@@ -52,14 +54,15 @@ const App = ({ navigation }) => { // Recebendo navigation como prop
             placeholderTextColor="#aaa"
           />
           <TouchableOpacity style={styles.button} onPress={handleGuess}>
-            <Text style={styles.buttonText}>Adivinhar</Text>
+            <Text style={styles.buttonText}>Tentar</Text>
           </TouchableOpacity>
         </BlurView>
 
         {/* Ícone de fechar para ir ao Catalogo */}
         <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
-          <SimpleLineIcons name="close" size={30} color="white" />
+          <Icon name="close" size={30} color="#6a1b9a" />
         </TouchableOpacity>
+
 
         {/* Modal para Dica (maior ou menor) */}
         <Modal
@@ -113,14 +116,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 27,
     fontWeight: 'bold',
     color: '#6a1b9a',
     marginBottom: 30,
-    fontFamily: 'Font5',
   },
   input: {
     height: 45,

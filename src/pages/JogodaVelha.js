@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 1,
+    borderRadius: 5,
   },
   cellText: {
     fontSize: 36,

@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, ImageBackground, Modal, Image } from 'react-native';
 import * as Progress from 'react-native-progress'; // Importa a biblioteca de progresso
 import { BlurView } from 'expo-blur';
+import Icon from 'react-native-vector-icons/Ionicons'; // Importando ícones
+import { useNavigation } from '@react-navigation/native'; // Importando useNavigation 
+
 
 export default function App() {
+  const navigation = useNavigation(); // Usando useNavigation para acessar a navegação
+
   const niveis = [
     {
       nivel: 1,
@@ -240,6 +245,10 @@ export default function App() {
           </Modal>
         </View>
       </BlurView>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
+          <Icon name="close" size={30} color="#BA52AD" />
+        </TouchableOpacity>
+
     </ImageBackground>
   );
 }
@@ -317,13 +326,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
+  closeButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+  },
   answerText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
   },
-  nextButton: {
-    backgroundColor: '#903799',
+  nextButton: {    backgroundColor: '#903799',
     padding: 15,
     marginTop: 20,
     borderRadius: 12,

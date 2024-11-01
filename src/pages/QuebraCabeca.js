@@ -86,6 +86,7 @@ const App = () => {
         <Text style={styles.stats}>Tempo: {time} segundos</Text>
         <View style={styles.board}>
           {board.map((value, index) => (
+            
             <TouchableOpacity
               key={index}
               style={[styles.piece, value === '' && styles.empty]}

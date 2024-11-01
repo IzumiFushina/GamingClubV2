@@ -24,6 +24,7 @@ import CatalogoV2 from "../pages/CatalogoV2";
 import TesteDeVide from "../pages/VídeoTest.Js";
 import TestComponent from "../pages/TestComponent";
 import JogodaForca from "../pages/Jogodaforca";
+import BLurTest from "../pages/blurtest";
 
 const Drawer = createDrawerNavigator();
 
@@ -68,6 +69,11 @@ export default function Index() {
         <Drawer.Screen 
           name="OnBoarding" 
           component={OnboardingScreen} 
+          options={{ headerShown: false }} 
+        />
+                <Drawer.Screen 
+          name="BlurTest" 
+          component={BLurTest} 
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 
@@ -160,7 +166,7 @@ export default function Index() {
           component={JogoDoClick} 
           options={{ headerShown: false }} 
         />
-        
+            
       </Drawer.Navigator>
     </NavigationContainer>
   );

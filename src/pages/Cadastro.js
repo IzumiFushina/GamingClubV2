@@ -62,11 +62,9 @@ export default function Cadastro() {
         source={require('../images/BackgroundQuebraCabeça.png')} 
         style={styles.background} 
       >
-        <BlurView intensity={50} style={styles.viewCds}>
+        <BlurView intensity={50} blurAmount={10} reducedTransparencyFallbackColor="black" style={styles.viewCds}>
           <TouchableOpacity style={styles.closeIcon} />
-
           <Text style={styles.titleText}>Cadastro</Text>
-
           <Animated.View style={{ transform: [{ translateY }] }}>
             <TouchableOpacity onPress={pickImage}>
               <Image 
@@ -74,11 +72,10 @@ export default function Cadastro() {
                 style={styles.avatar} 
               />
             </TouchableOpacity>
-
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.InputName}
-                placeholder="Username"
+                placeholder="Usuário"
                 placeholderTextColor="white"
                 value={username}
                 onChangeText={setUsername}
@@ -98,7 +95,7 @@ export default function Cadastro() {
             <View style={[styles.inputContainer, { marginBottom: 30 }]}>
               <TextInput
                 style={styles.InputName}
-                placeholder="Password"
+                placeholder="Senha"
                 placeholderTextColor="white"
                 secureTextEntry={true}
                 value={password}
@@ -145,7 +142,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     alignSelf: 'center',
-    marginBottom: 15,
+    marginBottom: 40,
     borderWidth: 1,
     borderColor: 'white',
   },
@@ -195,7 +192,7 @@ const styles = StyleSheet.create({
   viewCds: {
     height: '80%',
     width: '80%',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 0.5,
@@ -214,6 +211,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     alignSelf: 'flex-start',
     marginLeft: 20,
-    marginBottom: 20,
+    marginBottom: 30,
   },
 });

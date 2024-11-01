@@ -50,13 +50,13 @@ export default function Login() {
           <TouchableOpacity style={styles.closeIcon} />
 
           <Text style={styles.titleText}>Login</Text>
-          <Text style={styles.subtitleText}>Welcome back, please login to your account</Text>
+          <Text style={styles.subtitleText}>Bem-vindo de volta, faça login na sua conta</Text>
 
           <Animated.View style={{ transform: [{ translateY }] }}>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.InputName}
-                placeholder="User name"
+                placeholder="Usuário"
                 placeholderTextColor="white"
                 value={email}
                 onChangeText={setEmail} // Atualiza o estado do email
@@ -66,7 +66,7 @@ export default function Login() {
             <View style={[styles.inputContainer, { marginBottom: 30 }]}>
               <TextInput
                 style={styles.InputName}
-                placeholder="Password"
+                placeholder="Senha"
                 placeholderTextColor="white"
                 secureTextEntry={true}
                 value={password}
@@ -79,8 +79,8 @@ export default function Login() {
                 <Text style={styles.cdsButtonText}>Login</Text>
               </TouchableOpacity>
             </LinearGradient>
-            <Text style={styles.forgetPasswordText}>Forgot password?</Text>
-            <Text style={styles.signUpText}>Don't have an account? Sign up</Text>
+            <Text style={styles.forgetPasswordText}>Esqueceu sua senha?</Text>
+            <Text style={styles.signUpText}>Não tem cadastro? Cadastre-se</Text>
           </Animated.View>
         </BlurView>
       </ImageBackground>
@@ -192,5 +192,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: '100%',
     position: 'absolute',
+    textDecorationLine: 'underline',
   },  
 });

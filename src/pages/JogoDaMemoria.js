@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajuste a opacidade conforme necessário
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Ajuste a opacidade conforme necessário
   },
   closeButton: {
     position: 'absolute',
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     marginBottom: 10,
-    marginTop: 15,
+    marginTop: 40,
     color: "#d99bdd",
     fontFamily: 'Font5',
   },
