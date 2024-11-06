@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, Modal, Animated } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Importar o ícone
+import Icon from 'react-native-vector-icons/Ionicons';
+import { BlurView } from 'expo-blur'; // Importando BlurView
 
 const generateCards = () => {
   const cards = ['😴', '🤯', '😱', '🤭', '😢', '🫨', '😡', '🥰', '🤩', '😂', '🤢', '😝'];
@@ -8,14 +9,14 @@ const generateCards = () => {
   return duplicatedCards.sort(() => 0.5 - Math.random());
 };
 
-const App = ({ navigation }) => { // Adicione navigation como props
+const App = ({ navigation }) => {
   const [cards, setCards] = useState(generateCards());
   const [selectedCards, setSelectedCards] = useState([]);
   const [matchedCards, setMatchedCards] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [rotation] = useState(new Animated.Value(0)); // Animação de rotação
-  const [time, setTime] = useState(0); // Contador de tempo
-  const [isPlaying, setIsPlaying] = useState(false); // Para controlar o temporizador
+  const [rotation] = useState(new Animated.Value(0));
+  const [time, setTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     if (selectedCards.length === 2) {
@@ -24,8 +25,8 @@ const App = ({ navigation }) => { // Adicione navigation como props
         setMatchedCards([...matchedCards, firstIndex, secondIndex]);
         setSelectedCards([]);
         if (matchedCards.length + 2 === cards.length) {
-          setModalVisible(true); // Exibe o modal ao completar o jogo
-          setIsPlaying(false); // Para o temporizador
+          setModalVisible(true);
+          setIsPlaying(false);
         }
       } else {
         setTimeout(() => setSelectedCards([]), 1000);
@@ -37,10 +38,10 @@ const App = ({ navigation }) => { // Adicione navigation como props
     let timer;
     if (isPlaying) {
       timer = setInterval(() => {
-        setTime(prevTime => prevTime + 1); // Atualiza o tempo
-      }, 1000); // Atualiza a cada segundo
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
     }
-    return () => clearInterval(timer); // Limpa o timer ao desmontar
+    return () => clearInterval(timer);
   }, [isPlaying]);
 
   const handleCardPress = (index) => {
@@ -58,9 +59,9 @@ const App = ({ navigation }) => { // Adicione navigation como props
       setCards(generateCards());
       setSelectedCards([]);
       setMatchedCards([]);
-      rotation.setValue(0); // Reseta a rotação após o embaralhamento
-      setTime(0); // Reseta o tempo ao embaralhar
-      setIsPlaying(true); // Começa a contagem do tempo
+      rotation.setValue(0);
+      setTime(0);
+      setIsPlaying(true);
     });
   };
 
@@ -69,20 +70,17 @@ const App = ({ navigation }) => { // Adicione navigation como props
 
     const rotateY = rotation.interpolate({
       inputRange: [0, 1],
-      outputRange: ['0deg', '360deg'], // Rotação de 360 graus
+      outputRange: ['0deg', '360deg'],
     });
 
     return (
       <Animated.View style={{ transform: [{ rotateY }] }} key={index}>
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => handleCardPress(index)}
-        >
+        <TouchableOpacity style={styles.card} onPress={() => handleCardPress(index)}>
           {isFlipped ? (
             <Text style={styles.cardText}>{item}</Text>
           ) : (
             <Image
-              source={require('../images/jogodamemoria.png')} // Caminho local da imagem
+              source={require('../images/jogodamemoria.png')}
               style={styles.cardImage}
             />
           )}
@@ -92,30 +90,26 @@ const App = ({ navigation }) => { // Adicione navigation como props
   };
 
   return (
-    <ImageBackground
-      source={require('../images/fundo5.png')} // Imagem de fundo
-      style={styles.background}
-    >
-      <View style={styles.overlay} />
-      
-      {/* Ícone de fechar */}
-      <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
-        <Icon name="close" size={30} color="#BA52AD" />
-      </TouchableOpacity>
-      
+    <ImageBackground source={require('../images/fundo4.png')} style={styles.background}>
+      {/* BlurView para desfocar a imagem de fundo */}
+      <BlurView intensity={30} style={StyleSheet.absoluteFill} tint="dark" />
+
+      {/* Conteúdo do jogo */}
       <View style={styles.container}>
+        <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
+          <Icon name="close" size={30} color="#BA52AD" />
+        </TouchableOpacity>
+
         <Text style={styles.title}>Jogo Da Memória</Text>
         <Text style={styles.timer}>Tempo: {time} segundos</Text>
         <View style={styles.board}>
           {cards.map((item, index) => renderCard(item, index))}
         </View>
 
-        {/* Botão de Embaralhar */}
         <TouchableOpacity onPress={shuffleCards} style={styles.shuffleButton}>
           <Text style={styles.shuffleButtonText}>Embaralhar</Text>
         </TouchableOpacity>
 
-        {/* Modal de vitória */}
         <Modal visible={modalVisible} transparent={true} animationType="slide">
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -143,15 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Ajuste a opacidade conforme necessário
   },
   closeButton: {
     position: 'absolute',

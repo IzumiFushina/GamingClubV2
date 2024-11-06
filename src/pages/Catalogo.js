@@ -102,7 +102,7 @@ function Index({ navigation }) {
 
                 <Text style={styles.allGamesText}>Todos os jogos</Text>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10}}>
                     {games.map((game) => (
                         <View key={game.id} style={styles.gameContainer}>
                             <TouchableOpacity
@@ -121,6 +121,7 @@ function Index({ navigation }) {
                 <View style={styles.squareGrid}>
     {[...Array(4)].map((_, index) => (
         <View key={index} style={styles.squareContainer}>
+            
             <TouchableOpacity
                 style={[styles.clickableSquare, (index % 1 === 0 || index === 1) && styles.blackSquare]}
                 onPress={() => handleSquarePress(index + 1)}
@@ -324,7 +325,8 @@ const styles = StyleSheet.create({
     squareContainer: {
         width: '50%',
         alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: 10,
+   
     },
     clickableSquare: {
         width: '80%',

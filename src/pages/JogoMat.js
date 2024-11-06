@@ -8,7 +8,7 @@ const generateEquation = (level) => {
   const num1 = Math.floor(Math.random() * 10 * level);
   const num2 = Math.floor(Math.random() * 10 * level);
   const num3 = level > 5 ? Math.floor(Math.random() * 10 * level) : null; 
-  const operators = level > 3 ? ['+', '-', '*',] : ['+', '-', '*']; 
+  const operators = level > 3 ? ['+', '-', '*'] : ['+', '-', '*']; 
   const operator1 = operators[Math.floor(Math.random() * operators.length)];
   const operator2 = num3 ? operators[Math.floor(Math.random() * operators.length)] : null;
   
@@ -31,10 +31,10 @@ const generateEquation = (level) => {
 };
 
 export default function JogoMat() {
-  const navigation = useNavigation(); // Obtendo a função de navegação
+  const navigation = useNavigation();
   const [level, setLevel] = useState(1); 
   const [equation, setEquation] = useState(generateEquation(level));
-  const [userAnswer, setUserAnswer] = useState(''); 
+  const [userAnswer, setUserAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(0));
   const [modalVisible, setModalVisible] = useState(false);
@@ -54,32 +54,36 @@ export default function JogoMat() {
       setLevel(level + 1);
       setUserAnswer('');
     } else {
-      setModalVisible(true); // Exibe o modal com a medalha e a pontuação final
+      setModalVisible(true);
     }
   };
 
   const resetGame = () => {
-    setLevel(1); 
-    setScore(0); 
+    setLevel(1);
+    setScore(0);
     setUserAnswer('');
     setEquation(generateEquation(1));
-    setModalVisible(false); // Fecha o modal ao reiniciar o jogo
+    setModalVisible(false);
   };
 
   return (
     <ImageBackground 
-      source={require('../images/fundo4.png')} 
+      source={require('../images/fundo3.png')} 
       style={styles.background}
     >
       <View style={styles.outerContainer}>
-        <BlurView style={styles.container} blurType="light" blurAmount={10}>
+        <BlurView  intensity={10} style={styles.blurContainer}>
           <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
             Jogo de Matemática
           </Animated.Text>
           <Text style={styles.level}>Nível: {level}</Text>
-          <Animated.Text style={[styles.equation, { opacity: fadeAnim }]}>
-            {equation.equation}
-          </Animated.Text>
+
+          {/* Quadro para a equação */}
+          <View style={styles.equationBox}>
+            <Animated.Text style={[styles.equation, { opacity: fadeAnim }]}>
+              {equation.equation}
+            </Animated.Text>
+          </View>
 
           <TextInput
             style={styles.input}
@@ -141,36 +145,48 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     flex: 1,
+    width: '100%', // Para garantir que o contêiner ocupe toda a largura da tela
+    height: '100%', // Para garantir que o contêiner ocupe toda a altura da tela
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
-  container: {
-    width: '100%',
-    borderRadius: 20,
-    padding: 70,
+  blurContainer: {
+    position: 'absolute', // Garantir que ele fique posicionado sobre todo o conteúdo
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden', // necessário para efeito de blur arredondado
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Fundo escuro cobrindo toda a tela
   },
   title: {
-    fontSize: 30,
-    marginBottom: 20,
+    fontSize: 35,
     color: "#BA52AD",
     fontFamily: 'Font5',
     textAlign: 'center',
   },
   level: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#c5c3c5',
+    marginBottom: 40,
+    marginTop: 10,
+  },
+  equationBox: {
+    backgroundColor: 'white',  // Fundo do quadro
+    width: 250,
+    height: 80,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#933a88',
     marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   equation: {
     fontSize: 48,
     fontWeight: 'bold',
     color: '#933a88',
-    marginBottom: 20,
-    transform: [{ scale: 1.1 }],
     fontFamily: 'Font4',
   },
   input: {

@@ -16,7 +16,6 @@ export default function BLurTest() {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "black",
     flex: 1,
   },

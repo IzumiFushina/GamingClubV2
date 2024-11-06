@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   viewCds: {
-    height: '80%',
+    height: '68%',
     width: '80%',
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',

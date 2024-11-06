@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Fundo escuro cobrindo toda a tela
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo escuro cobrindo toda a tela
   },
   title: {
     fontSize: 40,

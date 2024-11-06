@@ -106,7 +106,8 @@ const App = () => {
   const playSound = async () => {
     if (!sound) {
       const { sound: newSound } = await Audio.Sound.createAsync(
-        require('../sounds/Campo Minado.mp3')
+        require('../sounds/Campo Minado.mp3'),
+        {volume: 0,}
       );
       setSound(newSound);
       await newSound.setIsLoopingAsync(true);
@@ -203,7 +204,7 @@ const App = () => {
         key={`${row}-${col}`}
         style={[
           styles.square,
-          { backgroundColor: square.isRevealed ? (square.isMine ? '#ff6b6b' : '#A9A9A9') : '#4c0d6b' },
+          { backgroundColor: square.isRevealed ? (square.isMine ? '#BA52AD' : '#B65FC8') : '#4c0d6b' },
         ]}
         onPress={() => handleSquarePress(row, col)}
       >
@@ -219,7 +220,7 @@ const App = () => {
       style={styles.background}
     >
       <Animated.View style={styles.container}>
-        <Text style={styles.title}>Campo Minado</Text>
+        <Text style={{fontFamily: 'Font5', fontSize: 40, color: "#BA52AD", marginBottom: 30, }}>Campo Minado</Text>
         <View style={styles.board}>
           {board.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
@@ -273,42 +274,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#BA52AD',
-    textAlign: 'center',
-    marginVertical: 20,
-    fontFamily: 'Font5',
-  },
   squareText: {
     fontSize: 20,
     color: '#fff',
   },
   resetButton: {
-    backgroundColor: '#1a2a5c',
-    padding: 8,
+    backgroundColor: '#4c0d6b',
+    justifyContent: "center",
     borderRadius: 5,
     alignItems: 'center',
     marginHorizontal: 5,
+    marginTop: 10,
   },
   resetButtonText: {
     color: '#fff',
     fontSize: 14,
+    alignItems: 'center',
   },
   flagButton: {
-    backgroundColor: '#4c0d6b',
-    padding: 8,
+    backgroundColor: '#BA52AD',
+    justifyContent: "center",
     borderRadius: 5,
     alignItems: 'center',
     marginHorizontal: 5,
     width: 180,
     height: 50,
+    fontFamily: 'Font5',
+    marginTop: 10,
   },
   flagButtonText: {
     color: '#fff',
     fontSize: 14,
-    textAlign: 'center',
+    alignSelf: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
