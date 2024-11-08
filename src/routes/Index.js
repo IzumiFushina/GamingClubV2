@@ -142,7 +142,7 @@ export default function Index() {
           options={{ headerShown: false }} 
         />
         <Drawer.Screen 
-          name="JogoPalavras" 
+          name="JogoNúmeros" 
           component={JogoPalavras} 
           options={{ headerShown: false }} 
         />

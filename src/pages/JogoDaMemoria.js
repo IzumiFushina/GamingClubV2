@@ -90,9 +90,9 @@ const App = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground source={require('../images/fundo4.png')} style={styles.background}>
+    <ImageBackground source={require('../images/fundo1.png')} style={styles.background}>
       {/* BlurView para desfocar a imagem de fundo */}
-      <BlurView intensity={30} style={StyleSheet.absoluteFill} tint="dark" />
+      <BlurView intensity={50} style={StyleSheet.absoluteFill} tint="dark" />
 
       {/* Conteúdo do jogo */}
       <View style={styles.container}>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     right: 20,
     zIndex: 1,
   },
@@ -151,9 +151,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    marginBottom: 10,
     marginTop: 40,
-    color: "#d99bdd",
+    color: "#BA52AD",
     fontFamily: 'Font5',
   },
   timer: {

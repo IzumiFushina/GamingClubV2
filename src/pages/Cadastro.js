@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Alert, Text, TextInput, TouchableOpacity, Animated, Image, ImageBackground } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { View, StyleSheet, Alert, Text, TextInput, TouchableOpacity, Animated, Image, ImageBackground, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback} from 'react-native';
+import { BlurView } from 'expo-blur' 
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -57,7 +57,11 @@ export default function Cadastro() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'width' : 'height'}
+      style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View styles={styles.containerview}>
       <ImageBackground 
         source={require('../images/BackgroundQuebraCabeça.png')} 
         style={styles.background} 
@@ -114,14 +118,20 @@ export default function Cadastro() {
           </Animated.View>
         </BlurView>
       </ImageBackground>
-    </View>
+      </View>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
+  },
+  containerview: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -145,6 +155,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     borderWidth: 1,
     borderColor: 'white',
+    blurRadius: 100,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -190,7 +201,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   viewCds: {
-    height: '80%',
+    height: '68%',
     width: '80%',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',

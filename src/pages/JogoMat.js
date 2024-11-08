@@ -72,10 +72,11 @@ export default function JogoMat() {
       style={styles.background}
     >
       <View style={styles.outerContainer}>
-        <BlurView  intensity={10} style={styles.blurContainer}>
+        <BlurView  intensity={25} style={styles.blurContainer}>
           <Animated.Text style={[styles.title, { opacity: fadeAnim }]}>
             Jogo de Matemática
           </Animated.Text>
+          <Text style={styles.subtitle}>Responda com seus conhecimentos matemáticos</Text>
           <Text style={styles.level}>Nível: {level}</Text>
 
           {/* Quadro para a equação */}
@@ -85,28 +86,25 @@ export default function JogoMat() {
             </Animated.Text>
           </View>
 
+          <Text style={styles.text}>Faça seus calculos!</Text>
+
           <TextInput
             style={styles.input}
             keyboardType="numeric"
             value={userAnswer}
             onChangeText={setUserAnswer}
             placeholder="Sua resposta"
-            placeholderTextColor="#888"
+            placeholderTextColor="white"
           />
 
           <TouchableOpacity onPress={checkAnswer} style={styles.button}>
             <Text style={styles.buttonText}>Enviar Resposta</Text>
           </TouchableOpacity>
 
-          <Text style={styles.score}>Pontuação: {score}</Text>
-
-          <TouchableOpacity onPress={resetGame} style={styles.resetButton}>
-            <Text style={styles.resetButtonText}>Reiniciar Jogo</Text>
-          </TouchableOpacity>
         </BlurView>
         
         <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
-          <Icon name="close" size={30} color="#6a1b9a" />
+          <Icon name="close" size={30} color="#BA52AD" />
         </TouchableOpacity>
 
         {/* Modal de exibição da medalha */}
@@ -166,6 +164,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Font5',
     textAlign: 'center',
   },
+  subtitle: {
+    fontSize: 15,
+    color: "#BA52AD",
+    fontFamily: 'Font5',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: 20,
+    color: "#c5c5c5",
+    fontFamily: 'Font4',
+    textAlign: 'center',
+    marginBottom: 5,
+    marginTop: 30,
+  },
   level: {
     fontSize: 20,
     color: '#c5c3c5',
@@ -173,12 +186,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   equationBox: {
-    backgroundColor: 'white',  // Fundo do quadro
+    backgroundColor: 'black',  // Fundo do quadro
     width: 250,
     height: 80,
-    borderRadius: 10,
+    borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#933a88',
+    borderColor: 'black',
     marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -186,28 +199,29 @@ const styles = StyleSheet.create({
   equation: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#933a88',
+    color: '#c5c5c5',
     fontFamily: 'Font4',
   },
   input: {
     height: 50,
-    borderColor: '#c5c3c5',
+    borderColor: 'black',
     borderWidth: 2,
     width: 200,
     marginBottom: 20,
     textAlign: 'center',
     fontSize: 24,
-    backgroundColor: '#f9fbfc',
-    color: '#4e5b6e',
-    borderRadius: 10,
+    backgroundColor: 'black',
+    color: 'white',
+    borderRadius: 15,
     fontFamily: 'Font4',
+    marginTop: 15,
   },
   button: {
-    backgroundColor: '#df62b0',
-    padding: 15,
+backgroundColor: '#BA52AD',
+padding: 10,
     borderRadius: 10,
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
@@ -259,7 +273,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 40,
+    top: 70,
     right: 20,
     zIndex: 1,
   },
@@ -269,7 +283,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalButton: {
-    backgroundColor: '#4b0d66',
+    backgroundColor: '#BA52AD',
     padding: 15,
     borderRadius: 10,
   },

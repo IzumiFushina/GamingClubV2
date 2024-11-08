@@ -46,7 +46,7 @@ function Index({ navigation }) {
         { id: 2, name: 'Jogo da Velha', route: 'JogodaVelha', image: gameImage2 },
         { id: 3, name: 'Xadrez', route: 'chess', image: gameImage3 },
         { id: 4, name: 'Jogo da Memória', route: 'JogoDaMemoria', image: gameImage4 },
-        { id: 5, name: 'Jogo das Palavras', route: 'JogoPalavras', image: adivinheJogo },
+        { id: 5, name: 'Jogo dos Números', route: 'JogoPalavras', image: adivinheJogo },
         { id: 6, name: 'Quebra-cabeça', route: 'QuebraCabeca', image: gameImage5 },
         { id: 7, name: 'Quiz', route: 'Quiz', image: gameImage6 },
         { id: 8, name: 'Jogo de Matemática', route: 'JogoMat', image: gameImage7 },
@@ -57,7 +57,6 @@ function Index({ navigation }) {
     };
 
     const handleSquarePress = (id) => {
-        // Verifica se é o quadrado 1, 2, 3 ou 4 para abrir o modal
         if (id <= 4) {
             setSelectedSquare(id);
             setModalVisible(true);
@@ -65,18 +64,17 @@ function Index({ navigation }) {
             console.log(`Quadrado ${id} clicado!`);
         }
     };
-    
 
     return (
         <View style={styles.container}>
             <Image source={backgroundImage} style={styles.backgroundImage} />
             
             <BlurView
-    style={styles.absolute}
-    blurType="dark"
-    blurAmount={5}
-    reducedTransparencyFallbackColor="rgba(0, 0, 0, 0.5)" // Diminua a opacidade para 0.5
-/>
+                style={styles.absolute}
+                blurType="dark"
+                blurAmount={5}
+                reducedTransparencyFallbackColor="rgba(0, 0, 0, 0.5)" // Diminua a opacidade para 0.5
+            />
             <ScrollView style={styles.scrollContainer}>
                 <Text style={styles.welcomeText}>
                     Bem vindo ao GamingClub!!
@@ -100,9 +98,20 @@ function Index({ navigation }) {
                     style={{ marginVertical: 20 }} 
                 />
 
-                <Text style={styles.allGamesText}>Todos os jogos</Text>
+                {/* Título com botões centralizados */}
+                <View style={styles.titleContainer}>
+                    <Text style={styles.allGamesText}>Todos os Jogos</Text>
+                    <View style={styles.buttonsContainer}>
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Button 1</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button}>
+                            <Text style={styles.buttonText}>Button 2</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10}}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginTop: 10 }}>
                     {games.map((game) => (
                         <View key={game.id} style={styles.gameContainer}>
                             <TouchableOpacity
@@ -119,30 +128,25 @@ function Index({ navigation }) {
                 <Text style={styles.popularGamesText}>Popular Games</Text>
                 
                 <View style={styles.squareGrid}>
-    {[...Array(4)].map((_, index) => (
-        <View key={index} style={styles.squareContainer}>
-            
-            <TouchableOpacity
-                style={[styles.clickableSquare, (index % 1 === 0 || index === 1) && styles.blackSquare]}
-                onPress={() => handleSquarePress(index + 1)}
-            >
-                {index === 0 ? (
-                    <Image source={gameImage1} style={styles.squareImage} />
-                ) : index === 1 ? (
-                    <Image source={gameImage2} style={styles.squareImage} />
-                ) : index === 2 ? ( // Aqui mudamos para o index 2
-                    <Image source={gameImage3} style={styles.squareImage} /> // Adiciona a imagem do xadrez
-                ) : (
-                    
-                    <Text style={styles.squareText}>{`Quadrado ${index + 1}`}</Text>
-                )}
-            </TouchableOpacity>
-        </View>
-    ))}
-</View>
-
-
-
+                    {[...Array(4)].map((_, index) => (
+                        <View key={index} style={styles.squareContainer}>
+                            <TouchableOpacity
+                                style={[styles.clickableSquare, (index % 1 === 0 || index === 1) && styles.blackSquare]}
+                                onPress={() => handleSquarePress(index + 1)}
+                            >
+                                {index === 0 ? (
+                                    <Image source={gameImage1} style={styles.squareImage} />
+                                ) : index === 1 ? (
+                                    <Image source={gameImage2} style={styles.squareImage} />
+                                ) : index === 2 ? (
+                                    <Image source={gameImage3} style={styles.squareImage} />
+                                ) : (
+                                    <Text style={styles.squareText}>{`Quadrado ${index + 1}`}</Text>
+                                )}
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </View>
             </ScrollView>
 
             <Animated.View style={[styles.footer, animatedFooterStyle]}>
@@ -170,19 +174,17 @@ function Index({ navigation }) {
             </Animated.View>
 
             {/* Modal */}
-            
-<Modal
-    animationType="slide"
-    transparent={true}
-    visible={modalVisible}
-    onRequestClose={() => setModalVisible(false)}
->
-    <View style={styles.modalView}>
-        <Text style={styles.modalText}>Você clicou no Quadrado {selectedSquare}</Text>
-        <Button title="Fechar" onPress={() => setModalVisible(false)} />
-    </View>
-</Modal>
-
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Você clicou no Quadrado {selectedSquare}</Text>
+                    <Button title="Fechar" onPress={() => setModalVisible(false)} />
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -203,7 +205,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.3)', // Diminua a opacidade para 0.3
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
         borderRadius: 5,
     },
     scrollContainer: {
@@ -213,13 +215,42 @@ const styles = StyleSheet.create({
     welcomeText: {
         fontSize: 25,
         fontFamily: 'Font5',
-        marginTop: "20%",
-        marginBottom: 20,
-        color: "#FF71B5", // Cor rosa vibrante
+        marginTop: "15%",
+        marginBottom: 10,
+        color: "#00e5e5",
         marginLeft: 15,
-        textShadowColor: '#db3082', // Sombra rosa
+        textShadowColor: '#00cbcc',
         textShadowOffset: { width: 0, height: 0 },
-        textShadowRadius: 5,
+        textShadowRadius: 3,
+    },
+    titleContainer: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    allGamesText: {
+        fontSize: 20,
+        fontFamily: 'Font5',
+        marginBottom: 10,
+        color: "#00e5e5",
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width:200,
+    },
+    button: {
+        backgroundColor: '#E07BDA',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 5,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontFamily: 'Font5',
     },
     carouselItem: {
         flex: 1,
@@ -266,7 +297,7 @@ const styles = StyleSheet.create({
         textShadowRadius: 5,
     },
     square: {
-        width: 100,
+        width: 130,
         height: 100,
         borderRadius: 15,
         overflow: 'hidden',

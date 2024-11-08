@@ -43,8 +43,9 @@ const App = ({ navigation }) => { // Recebendo navigation como prop
   return (
     <ImageBackground source={require('../images/imagemfundo1.png')} style={styles.background}>
       <View style={styles.outerContainer}>
-        <BlurView style={styles.container} intensity={50} tint="light">
           <Text style={styles.title}>Adivinhe o Número!</Text>
+          <Text style={styles.subtitle}>Arrisque seu chute e tente acertar </Text>
+          <Text style={styles.subtitle}> o número escolhido de 1 a 100!!</Text>
           <TextInput
             style={styles.input}
             keyboardType="numeric"
@@ -56,8 +57,7 @@ const App = ({ navigation }) => { // Recebendo navigation como prop
           <TouchableOpacity style={styles.button} onPress={handleGuess}>
             <Text style={styles.buttonText}>Tentar</Text>
           </TouchableOpacity>
-        </BlurView>
-
+        
         {/* Ícone de fechar para ir ao Catalogo */}
         <TouchableOpacity style={styles.closeButton} onPress={() => navigation.navigate('Catalogo')}>
           <Icon name="close" size={30} color="#6a1b9a" />
@@ -107,22 +107,19 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-  },
-  container: {
-    width: '85%',
-    padding: 25,
-    borderRadius: 15,
-    alignItems: 'center',
-    overflow: 'hidden',
-    backgroundColor: 'white',
-  },
+    marginTop: 200,
+  },  
   title: {
     fontSize: 27,
     fontWeight: 'bold',
-    color: '#6a1b9a',
-    marginBottom: 30,
+    color: '#9b2dde',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#a7a7a7',
   },
   input: {
     height: 45,
@@ -130,17 +127,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 15,
-    width: '100%',
+    width: 215,
     marginBottom: 20,
+    marginTop: 50,
     color: '#333',
     fontSize: 16,
+    backgroundColor: 'black',
   },
   button: {
     width: '80%',
     paddingVertical: 12,
-    backgroundColor: '#6a1b9a',
+    backgroundColor: '#9b2dde',
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 50,
   },
   buttonText: {
     color: '#fff',
